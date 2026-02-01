@@ -7,7 +7,7 @@
   "types": "./dist/types/vureact-router.d.ts",
   "author": "Ryan John",
   "license": "MIT",
-  "description": "Vue3 Router Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)",
+  "description": "Vue Router 4.x Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)",
   "keywords": [
     "react",
     "vureact-router",
