@@ -10,9 +10,10 @@
   "description": "Vue Router 4.x Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)",
   "keywords": [
     "react",
-    "vureact-router",
     "react-router",
     "react-router-dom",
+    "react-vue-like",
+    "vureact-router",
     "react-vue-router-adapter"
   ],
   "exports": {
