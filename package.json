@@ -3,13 +3,7 @@
   "packageManager": "pnpm@10.28.2",
   "scripts": {
     "build:router": "pnpm -F @vureact/router build",
-    "test:useRoute": "pnpm -F @vureact/runtime-core test -- router/useRoute.test.tsx",
-    "test:useRouter": "pnpm -F @vureact/runtime-core test -- router/useRouter.test.tsx",
-    "test:routerLink": "pnpm -F @vureact/runtime-core test -- router/RouterLink.test.tsx",
-    "test:routerView": "pnpm -F @vureact/runtime-core test -- router/RouterView.test.tsx",
-    "test:globalGuards": "pnpm -F @vureact/runtime-core test -- router/globalGuards.test.tsx",
-    "test:exclusiveGuards": "pnpm -F @vureact/runtime-core test -- router/exclusiveGuards.test.tsx",
-    "test:componentGuards": "pnpm -F @vureact/runtime-core test -- router/componentGuards.test.tsx"
+    "test:router": "pnpm -F @vureact/router test -- router"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
