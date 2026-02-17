@@ -16,8 +16,10 @@ export function RouterContextProvider({ guardManager, children }: RouterProvider
   return <RouterContext.Provider value={{ guardManager }}>{children}</RouterContext.Provider>;
 }
 
+export const useOptionalRouterContext = () => useContext(RouterContext);
+
 export const useRouterContext = () => {
-  const context = useContext(RouterContext);
+  const context = useOptionalRouterContext();
   if (!context) {
     throw new Error('useRouterContext must be used within a RouterContextProvider');
   }
