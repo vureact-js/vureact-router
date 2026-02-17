@@ -1,9 +1,32 @@
 import { type FunctionComponent, type ReactNode } from 'react';
-import type { DataRouter, NonIndexRouteObject, RouteObject, To } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
-import { type ExclusiveGuards, type GlobalGuards } from '../guards/guardManager';
-import type { RouterOptions as RouterHookOptions } from '../hooks/useRouter';
-import { buildSearchParams, getRouteConfig, isPromise, resolvedPath } from '../utils';
+import {
+  Navigate,
+  matchRoutes,
+  type DataRouter,
+  type NonIndexRouteObject,
+  type RouteObject,
+  type To,
+} from 'react-router-dom';
+import {
+  type ErrorHandler,
+  type ExclusiveGuards,
+  type GlobalGuards,
+  type GuardWithNextFn,
+} from '../guards/guardManager';
+import type { RouteLocation, RouteLocationMatched } from '../hooks/useRoute';
+import { type RouterOptions as RouterHookOptions } from '../hooks/useRouter';
+import { registerRuntimeRouterConfig, resetRuntimeRouterConfig } from '../runtimeConfig';
+import {
+  buildResolvedTo,
+  buildSearchParams,
+  findParentRoute,
+  getRouteByPath,
+  getRouteConfig,
+  hasRouteByName,
+  isPromise,
+  parseQueryString,
+  resolvedPath,
+} from '../utils';
 import { createAsyncElement, type ComponentLoader } from './createAsyncElement';
 import {
   registerRouteConfig,
@@ -18,6 +41,10 @@ export interface CreateRouterOptions {
   history?: RouterMode;
   initialEntries?: string[];
   initialIndex?: number;
+  linkActiveClass?: string;
+  linkExactActiveClass?: string;
+  parseQuery?: (search: string) => Record<string, any>;
+  stringifyQuery?: (query: Record<string, any>) => string;
 }
 
 export interface RouteConfig extends ExclusiveGuards {
@@ -44,65 +71,37 @@ type Redirect = string | RedirectOptions;
 type RedirectOptions = RouterHookOptions;
 
 export interface RouterInstance extends GlobalGuards {
-  /**
-   * A Router instance manages all navigation and data loading/mutations
-   */
   router: DataRouter;
-  /**
-   * Render the UI for the given DataRouter. This component should
-   * typically be at the top of an app's element tree.
-   *
-   * ```tsx
-   * import { createRouter, createWebHistory } from "react-vue3-components";
-   * import { createRoot } from "react-dom/client";
-   *
-   * const { RouterProvider } = createRouter({
-   *   history: createWebHistory(),
-   *   routes: []
-   * });
-   * createRoot(document.getElementById("root")).render(
-   *   <RouterProvider />
-   * );
-   * ```
-   * @returns React element for the rendered router
-   */
   RouterProvider: FunctionComponent;
   clearAll: () => void;
   getRoutes: () => Readonly<GlobalRouteConfig>;
+  addRoute: {
+    (route: RouteConfig): void;
+    (parentName: string, route: RouteConfig): void;
+  };
+  hasRoute: (name: string) => boolean;
+  resolve: (to: string | RouterHookOptions) => RouteLocation;
 }
 
 export type ReactRoute = RouteObject;
 
-/**
- * Simulate Vue's `createRouter` based on `react-router-dom`
- *
- * @see https://router-vureact.vercel.app/en/guide
- *
- * @param {CreateRouterOptions} options Application routes
- * @param {CreateRouterOptions.routes} options.routes n/a
- * @param {CreateRouterOptions.history} options.history n/a
- * @param {CreateRouterOptions.initialEntries} options.initialEntries n/a
- * @param {CreateRouterOptions.initialIndex} options.initialIndex n/a
- *
- * @returns {RouterInstance} Includes the route instance, RouterProvider, and so on.
- *
- * @field `RouterInstance.router` An initialized DataRouter data router
- * @field `RouterInstance.RouterProvider` Use the component directly without passing in DataRouter data router.
- */
-export function createRouter(options: CreateRouterOptions): RouterInstance {
-  const { history = createWebHashHistory(), routes, ...memoryRouterOpts } = options;
-
-  const convertedRoutes: ReactRoute[] = [];
+function convertRoute(route: RouteConfig): ReactRoute {
+  const reactRoute: ReactRoute = {
+    path: route.path,
+    id: route.name,
+    loader: route.loader,
+    caseSensitive: route.sensitive,
+    children: route.children?.map(convertRoute),
+  };
 
   const handleElement = ({ component, meta }: RouteConfig): ReactNode => {
     if (typeof component === 'function') {
       try {
-        // 尝试执行函数，检查返回值是否为 Promise
         if (isPromise(component())) {
           return createAsyncElement(component as ComponentLoader, meta?.loadingComponent);
         }
-      } catch (error) {
-        console.error('[Router] Invalid component loader:', error);
+      } catch {
+        // ignore invalid lazy component probe and treat as sync component
       }
     }
     return component as ReactNode;
@@ -110,8 +109,7 @@ export function createRouter(options: CreateRouterOptions): RouterInstance {
 
   const handleRedirect = (to: RouteConfig, redirect: RouteConfig['redirect']): ReactNode => {
     if (typeof redirect === 'function') {
-      const redirectResult = redirect(to);
-      return handleRedirect(to, redirectResult);
+      return handleRedirect(to, redirect(to));
     }
 
     if (typeof redirect === 'string') {
@@ -119,77 +117,161 @@ export function createRouter(options: CreateRouterOptions): RouterInstance {
     }
 
     if (typeof redirect === 'object') {
-      const to: To = {
+      const targetTo: To = {
         hash: redirect.hash,
         pathname: resolvedPath(redirect),
         search: buildSearchParams(redirect.query),
       };
 
-      return <Navigate to={to} state={redirect.state} replace />;
+      return <Navigate to={targetTo} state={redirect.state} replace />;
     }
 
     return null;
   };
 
-  const handleLinkClasses = (route: RouteConfig) => {
-    // 这些配置会在 RouterLink 组件中使用
-    // 这里只做存储，不进行实际处理
+  reactRoute.element = route.redirect
+    ? handleRedirect(route, route.redirect)
+    : handleElement(route);
+
+  return reactRoute;
+}
+
+function createLocationFrom(
+  router: DataRouter,
+  to: string | RouterHookOptions,
+  sourceConvertedRoutes: ReactRoute[],
+): RouteLocation {
+  const current = router.state.location;
+  const resolved = buildResolvedTo(to, current.pathname);
+  const fullPath = `${resolved.pathname}${resolved.search}${resolved.hash}`;
+  const query = parseQueryString(resolved.search);
+  const route = getRouteByPath(resolved.pathname);
+
+  const matches =
+    matchRoutes(sourceConvertedRoutes, {
+      pathname: resolved.pathname,
+      search: resolved.search,
+      hash: resolved.hash,
+    }) ?? [];
+
+  const matched = matches.map<RouteLocationMatched>((matchedRecord) => {
+    const record = getRouteByPath(matchedRecord.pathname);
     return {
-      linkActiveClassName: route.linkActiveClassName,
-      linkExactActiveClassName: route.linkExactActiveClassName,
-      linkInActiveClassName: route.linkInActiveClassName,
+      name: matchedRecord.route.id || '',
+      pathname: matchedRecord.pathname,
+      path: record?.path,
+      params: matchedRecord.params,
+      meta: record?.meta,
     };
-  };
-
-  const handleMeta = (route: RouteConfig) => {
-    // meta 数据存储在全局配置中，供路由守卫等高级特性使用
-    // 这里不做具体处理，只确保配置被正确存储
-    return route.meta;
-  };
-
-  const convertRoute = (route: RouteConfig): ReactRoute => {
-    const reactRoute: ReactRoute = {
-      path: route.path,
-      id: route.name,
-      loader: route.loader,
-      element: handleElement(route),
-      caseSensitive: route.sensitive,
-      children: route.children?.map(convertRoute),
-    };
-
-    // 处理重定向（优先级最高）
-    if (route.redirect) {
-      const redirectElement = handleRedirect(route, route.redirect);
-      reactRoute.element = (
-        <>
-          {redirectElement}
-          {reactRoute.element}
-        </>
-      );
-    }
-
-    // 这些配置会被存储在全局配置中
-
-    handleMeta(route);
-    handleLinkClasses(route);
-
-    return reactRoute;
-  };
-
-  routes.forEach((route) => {
-    // 转换主路由
-    const mainRoute = convertRoute(route);
-    convertedRoutes.push(mainRoute);
   });
 
-  registerRouteConfig(routes, convertedRoutes);
+  const meta = matched.reduce<Record<string, any>>((acc, currentMatch) => {
+    if (currentMatch.meta) {
+      Object.assign(acc, currentMatch.meta);
+    }
+    return acc;
+  }, {});
+
+  return {
+    name: route?.name || '',
+    path: resolved.pathname,
+    params: matched[machedLastIndex(matched)]?.params ?? {},
+    hash: resolved.hash,
+    meta,
+    state: resolved.state,
+    fullPath,
+    query,
+    matched,
+  };
+}
+
+function machedLastIndex<T>(arr: T[]): number {
+  return arr.length > 0 ? arr.length - 1 : 0;
+}
+
+function appendSourceRoute(parentName: string | undefined, route: RouteConfig) {
+  if (!parentName) {
+    _pushUniqueRoute(_ROUTE_CONTAINER_.source, route);
+    return;
+  }
+
+  const parent = findParentRoute(parentName);
+  if (!parent) {
+    throw new Error(`[Router] Parent route with name "${parentName}" not found.`);
+  }
+
+  parent.children ??= [];
+  _pushUniqueRoute(parent.children, route);
+}
+
+const _ROUTE_CONTAINER_ = {
+  source: [] as RouteConfig[],
+  converted: [] as ReactRoute[],
+};
+
+function _pushUniqueRoute(list: RouteConfig[], route: RouteConfig) {
+  if (route.name && list.some((item) => item.name === route.name)) {
+    throw new Error(`[Router] Route with name "${route.name}" already exists.`);
+  }
+  list.push(route);
+}
+
+export function createRouter(options: CreateRouterOptions): RouterInstance {
+  const {
+    history = createWebHashHistory(),
+    routes,
+    linkActiveClass,
+    linkExactActiveClass,
+    parseQuery,
+    stringifyQuery,
+    ...memoryRouterOpts
+  } = options;
+
+  registerRuntimeRouterConfig({
+    linkActiveClass: linkActiveClass ?? 'router-link-active',
+    linkExactActiveClass: linkExactActiveClass ?? 'router-link-exact-active',
+    parseQuery,
+    stringifyQuery,
+  });
+
+  const convertedRoutes = routes.map(convertRoute);
+
+  _ROUTE_CONTAINER_.source = routes;
+  _ROUTE_CONTAINER_.converted = convertedRoutes;
+
+  registerRouteConfig(_ROUTE_CONTAINER_.source, _ROUTE_CONTAINER_.converted);
 
   const router = routerFactory(history, convertedRoutes, memoryRouterOpts);
-
   const { guardManager, RouterProvider } = createRouterProvider(router);
+
+  const addRoute: RouterInstance['addRoute'] = (
+    parentOrRoute: string | RouteConfig,
+    maybeRoute?: RouteConfig,
+  ) => {
+    const parentName = typeof parentOrRoute === 'string' ? parentOrRoute : undefined;
+    const route = (typeof parentOrRoute === 'string' ? maybeRoute : parentOrRoute) as RouteConfig;
+
+    if (!route) {
+      throw new Error('[Router] addRoute requires a valid route config.');
+    }
+
+    appendSourceRoute(parentName, route);
+
+    const converted = convertRoute(route);
+    _ROUTE_CONTAINER_.converted.push(converted);
+    registerRouteConfig(_ROUTE_CONTAINER_.source, _ROUTE_CONTAINER_.converted);
+
+    if (parentName) {
+      router.patchRoutes(parentName, [converted]);
+      return;
+    }
+
+    router.patchRoutes(null, [converted]);
+  };
 
   const clearAll = () => {
     resetRouteConfig();
+    resetRuntimeRouterConfig();
     guardManager.clear();
     routes.length = 0;
   };
@@ -198,14 +280,24 @@ export function createRouter(options: CreateRouterOptions): RouterInstance {
     router,
     clearAll,
     RouterProvider,
-    beforeEach(guard) {
-      guardManager.registerGuard('beforeEachGuards', guard);
+    beforeEach(guard: GuardWithNextFn) {
+      return guardManager.registerGuard('beforeEachGuards', guard);
     },
-    beforeResolve(guard) {
-      guardManager.registerGuard('beforeResolveGuards', guard);
+    beforeResolve(guard: GuardWithNextFn) {
+      return guardManager.registerGuard('beforeResolveGuards', guard);
     },
     afterEach(guard) {
-      guardManager.registerGuard('afterEachGuards', guard);
+      return guardManager.registerGuard('afterEachGuards', guard);
+    },
+    onError(handler: ErrorHandler) {
+      return guardManager.registerOnError(handler);
+    },
+    addRoute,
+    hasRoute(name: string) {
+      return hasRouteByName(name);
+    },
+    resolve(to: string | RouterHookOptions) {
+      return createLocationFrom(router, to, _ROUTE_CONTAINER_.converted);
     },
     getRoutes: getRouteConfig,
   };
