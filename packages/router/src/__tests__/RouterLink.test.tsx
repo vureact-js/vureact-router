@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+﻿import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider } from 'react-router-dom';
 import { createMemoryHistory, createRouter, RouterLink } from '..';
@@ -163,6 +163,45 @@ describe('<RouterLink> test suites', () => {
     expect(homeLink?.classList).not.toContain('active');
   });
 
+
+  it('should support vue-style alias props', () => {
+    render(
+      <TestWrapper>
+        <RouterLink to="/about" activeClass="active-a" exactActiveClass="exact-a">
+          About
+        </RouterLink>
+      </TestWrapper>,
+    );
+
+    const link = screen.getByText('About');
+    expect(link.classList).toContain('active-a');
+    expect(link.classList).toContain('exact-a');
+  });
+
+  it('should fallback to global link class options', () => {
+    const { router } = createRouter({
+      history: createMemoryHistory(),
+      linkActiveClass: 'global-active',
+      linkExactActiveClass: 'global-exact',
+      routes: [
+        {
+          path: '/',
+          component: <RouterLink to="/about">Go</RouterLink>,
+        },
+        {
+          path: '/about',
+          component: <RouterLink to="/about">Go</RouterLink>,
+        },
+      ],
+      initialEntries: ['/about'],
+    });
+
+    render(<RouterProvider router={router} />);
+
+    const link = screen.getByText('Go');
+    expect(link.classList).toContain('global-active');
+    expect(link.classList).toContain('global-exact');
+  });
   it('should navigate to new route on click', async () => {
     const { router } = createRouter({
       history: createMemoryHistory(),
@@ -189,7 +228,7 @@ describe('<RouterLink> test suites', () => {
     const link = screen.getByText('Go to About');
     fireEvent.click(link);
 
-    // 等待导航完成并验证新页面
+    // 绛夊緟瀵艰埅瀹屾垚骞堕獙璇佹柊椤甸潰
     expect(await screen.findByText('About Page')).toBeInTheDocument();
   });
 
@@ -249,7 +288,7 @@ describe('<RouterLink> test suites', () => {
     render(<RouterProvider router={router} />);
 
     const button = screen.getByText('Navigate to Search');
-    // 初始在首页
+    // 鍒濆鍦ㄩ椤?
     expect(button).toBeInTheDocument();
 
     fireEvent.click(button);
@@ -274,3 +313,5 @@ describe('<RouterLink> test suites', () => {
     expect(screen.queryByText('This children should be ignored')).not.toBeInTheDocument();
   });
 });
+
+
