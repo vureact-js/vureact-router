@@ -1,72 +1,68 @@
 import { useMemo } from 'react';
 import { type Params, useLocation, useMatches, useParams } from 'react-router-dom';
-import { getRouteByPath } from '../utils';
+import { useOptionalRouterContext } from '../context/RouterContext';
+import { getRouteByPath, parseQueryString } from '../utils';
+
+export interface RouteLocationMatched {
+  name: string;
+  pathname: string;
+  path?: string;
+  params: Params;
+  meta?: Record<string, any>;
+}
 
 export interface RouteLocation {
   name: string;
   path: string;
   params: Params;
   hash: string;
-  meta: any;
+  meta: Record<string, any>;
   state: any;
   fullPath: string;
   query: Record<string, any>;
-  matched: Array<{
-    name: string;
-    pathname: string;
-    params: Params;
-  }>;
+  redirectedFrom?: string;
+  matched: RouteLocationMatched[];
 }
 
-/**
- * Simulate Vue's `useRoute`, based on `react-router-dom`.
- *
- * @see https://router-vureact.vercel.app/en/guide
- *
- * @returns a route object
- *
- * @field `RouteLocation.name`
- * @field `RouteLocation.path`
- * @field `RouteLocation.params`
- * @field `RouteLocation.hash`
- * @field `RouteLocation.state`
- * @field `RouteLocation.fullPath`
- * @field `RouteLocation.query`
- * @field `RouteLocation.matched`
- */
 export function useRoute(): RouteLocation {
   const { hash, search, pathname, state } = useLocation();
+  const context = useOptionalRouterContext();
+  const guardManager = context?.guardManager;
 
   const params = useParams();
   const matches = useMatches();
 
-  // 解析查询参数
-  const query = useMemo(() => {
-    const searchParams = new URLSearchParams(search);
-    const result: Record<string, string> = {};
-    for (const [key, value] of searchParams.entries()) {
-      result[key] = value;
-    }
-    return result;
-  }, [search]);
+  const query = useMemo(() => parseQueryString(search), [search]);
 
-  // 构建完整路径
-  const fullPath = useMemo(() => {
-    return pathname + search + hash;
-  }, [pathname, search, hash]);
+  const fullPath = useMemo(() => pathname + search + hash, [pathname, search, hash]);
 
-  const matched = matches.map(({ id, params, pathname }) => {
-    return {
-      name: id,
-      pathname,
-      params,
-    };
-  });
+  const matched = useMemo<RouteLocationMatched[]>(
+    () =>
+      matches.map(({ id, params: currentParams, pathname: currentPathname }) => {
+        const config = getRouteByPath(currentPathname);
+        return {
+          name: id,
+          pathname: currentPathname,
+          path: config?.path,
+          params: currentParams,
+          meta: config?.meta,
+        };
+      }),
+    [matches],
+  );
 
   const config = getRouteByPath(pathname);
-
   const name = config?.name || '';
-  const meta = config?.meta || {};
+
+  const meta = matched.reduce<Record<string, any>>((acc, current) => {
+    if (current.meta) {
+      Object.assign(acc, current.meta);
+    }
+    return acc;
+  }, {});
+
+  const latestTransition = guardManager?.getLatestTransition();
+  const redirectedFrom = latestTransition?.failure?.type === 'redirected' ? latestTransition.from.fullPath : undefined;
 
   return {
     name,
@@ -77,6 +73,8 @@ export function useRoute(): RouteLocation {
     meta,
     state,
     fullPath,
+    redirectedFrom,
     matched,
   };
 }
+

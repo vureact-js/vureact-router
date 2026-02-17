@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+﻿import { act, renderHook } from '@testing-library/react';
 import { RouterProvider } from 'react-router-dom';
 import { createMemoryHistory, createRouter, useRouter, type Router } from '..';
 
@@ -126,33 +126,60 @@ describe('useRouter test suites', () => {
       wrapper: () => <RouterProvider router={routerInstance} />,
     });
 
-    // 先导航到 about
+    // 鍏堝鑸埌 about
     act(() => {
       testRouter.push('/about');
     });
     expect(routerInstance.state.location.pathname).toBe('/about');
 
-    // 再导航到 search
+    // 鍐嶅鑸埌 search
     act(() => {
       testRouter.push('/search');
     });
     expect(routerInstance.state.location.pathname).toBe('/search');
 
-    // 后退
+    // 鍚庨€€
     act(() => {
       testRouter.back();
     });
     expect(routerInstance.state.location.pathname).toBe('/about');
 
-    // 前进
+    // 鍓嶈繘
     act(() => {
       testRouter.forward();
     });
     expect(routerInstance.state.location.pathname).toBe('/search');
   });
 
+
+  it('should not mutate to options object', () => {
+    renderHook(() => useRouter(), {
+      wrapper: () => <RouterProvider router={routerInstance} />,
+    });
+
+    const to = { path: '/user/:id', params: { id: '1' }, query: { tab: 'x' } } as const;
+
+    act(() => {
+      testRouter.push(to as any);
+    });
+
+    expect(to).toEqual({ path: '/user/:id', params: { id: '1' }, query: { tab: 'x' } });
+  });
+
+  it('should expose resolve result', () => {
+    renderHook(() => useRouter(), {
+      wrapper: () => <RouterProvider router={routerInstance} />,
+    });
+
+    const resolved = testRouter.resolve({ name: 'about', query: { tab: 'profile' }, hash: 'info' });
+
+    expect(resolved.path).toBe('/about');
+    expect(resolved.fullPath).toBe('/about?tab=profile#info');
+    expect(resolved.query).toEqual({ tab: 'profile' });
+    expect(resolved.hash).toBe('#info');
+  });
   it('should return current path', () => {
-    // 设置初始路径为带查询参数和hash的路径
+    // 璁剧疆鍒濆璺緞涓哄甫鏌ヨ鍙傛暟鍜宧ash鐨勮矾寰?
     routerInstance = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -180,3 +207,5 @@ describe('useRouter test suites', () => {
     expect(testRouter.current).toBe('/home?tab=settings#profile');
   });
 });
+
+

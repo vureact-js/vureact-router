@@ -1,10 +1,11 @@
-import { render } from '@testing-library/react';
+﻿import { render } from '@testing-library/react';
 import { useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import { createMemoryHistory, createRouter, type RouteLocation, useRoute } from '..';
+import { RouterView, createMemoryHistory, createRouter, type RouteLocation, useRoute } from '..';
 
 describe('useRoute test suites', () => {
   let routeData: RouteLocation | null = null;
+  const routerInstances: Array<{ clearAll: () => void }> = [];
 
   function TestComponent() {
     const route = useRoute();
@@ -20,8 +21,13 @@ describe('useRoute test suites', () => {
     routeData = null;
   });
 
+  afterEach(() => {
+    routerInstances.forEach((instance) => instance.clearAll());
+    routerInstances.length = 0;
+  });
+
   it('should return correct route information', () => {
-    const { router } = createRouter({
+    const instance = createRouter({
       history: createMemoryHistory(),
       routes: [
         {
@@ -33,7 +39,8 @@ describe('useRoute test suites', () => {
       initialEntries: ['/user/123?name=test#section'],
     });
 
-    render(<RouterProvider router={router} />);
+    routerInstances.push(instance);
+    render(<RouterProvider router={instance.router} />);
 
     expect(routeData).not.toBeNull();
     expect(routeData!.path).toBe('/user/123');
@@ -44,30 +51,74 @@ describe('useRoute test suites', () => {
     expect(routeData!.fullPath).toBe('/user/123?name=test#section');
   });
 
-  it('Redirection should return correct information.', () => {
-    const { router } = createRouter({
+  it('should use custom parse/stringify query', () => {
+    const instance = createRouter({
+      history: createMemoryHistory(),
+      stringifyQuery(query) {
+        return Object.entries(query)
+          .map(([k, v]) => `${k}:${v}`)
+          .join(';');
+      },
+      parseQuery(search) {
+        const raw = search.startsWith('?') ? search.slice(1) : search;
+        if (!raw) return {};
+        return Object.fromEntries(raw.split(';').map((entry) => entry.split(':')));
+      },
+      routes: [
+        {
+          path: '/search',
+          component: <TestComponent />,
+        },
+      ],
+      initialEntries: ['/search?foo:bar;page:2'],
+    });
+
+    routerInstances.push(instance);
+    render(<RouterProvider router={instance.router} />);
+
+    expect(routeData!.query).toEqual({ foo: 'bar', page: '2' });
+  });
+
+  it('should merge meta from matched records', () => {
+    const instance = createRouter({
       history: createMemoryHistory(),
       routes: [
         {
           path: '/',
-          // redirect: '/post/123',
+          component: <RouterView />, 
+          meta: { layout: 'main' },
+          children: [
+            {
+              path: 'post/:id',
+              component: <TestComponent />,
+              meta: { requiresAuth: true },
+            },
+          ],
+        },
+      ],
+      initialEntries: ['/post/1'],
+    });
 
-          // redirect: {
-          //   path: '/post/:id',
-          //   params: { id: '123' },
-          //   query: { name: 'test' },
-          //   state: { pwd: '123' },
-          // },
+    routerInstances.push(instance);
+    render(<instance.RouterProvider />);
 
-          redirect: (to) => {
-            // return '/post/123';
-            return {
-              path: '/post/:id',
-              params: { id: '123' },
-              query: { name: 'test' },
-              state: { pwd: '123' },
-            };
-          },
+    expect(routeData).not.toBeNull();
+    expect(routeData!.meta).toEqual({ layout: 'main', requiresAuth: true });
+    expect(routeData!.matched.length).toBeGreaterThan(1);
+  });
+
+  it('Redirection should return correct information.', () => {
+    const instance = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        {
+          path: '/',
+          redirect: () => ({
+            path: '/post/:id',
+            params: { id: '123' },
+            query: { name: 'test' },
+            state: { pwd: '123' },
+          }),
         },
         {
           path: '/post/:id',
@@ -76,7 +127,8 @@ describe('useRoute test suites', () => {
       ],
     });
 
-    render(<RouterProvider router={router} />);
+    routerInstances.push(instance);
+    render(<RouterProvider router={instance.router} />);
 
     expect(routeData!.path).toBe('/post/123');
     expect(routeData!.params).toStrictEqual({ id: '123' });
@@ -85,3 +137,5 @@ describe('useRoute test suites', () => {
     expect(routeData!.fullPath).toBe('/post/123?name=test');
   });
 });
+
+

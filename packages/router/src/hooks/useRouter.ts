@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { type NavigateOptions, type Params, useLocation, useNavigate } from 'react-router-dom';
-import { buildFullPath } from '../utils';
+import { buildFullPath, buildResolvedTo, normalizeRouterOptions, parseQueryString } from '../utils';
 
 export interface Router {
   push: (to: string | RouterOptions) => void | Promise<void>;
@@ -8,6 +8,13 @@ export interface Router {
   go: (delta: number) => void | Promise<void>;
   back: () => void | Promise<void>;
   forward: () => void | Promise<void>;
+  resolve: (to: string | RouterOptions) => {
+    href: string;
+    path: string;
+    fullPath: string;
+    query: Record<string, any>;
+    hash: string;
+  };
   current: string;
 }
 
@@ -18,62 +25,33 @@ export interface RouterOptions extends NavigateOptions {
   replace?: boolean;
   state?: any;
   hash?: string;
-  query?: Record<string, string>;
+  query?: Record<string, any>;
 }
 
-/**
- * Simulate Vue's `useRouter`, based on `react-router-dom`.
- *
- * @see https://router-vureact.vercel.app/en/navigation
- *
- * @returns a route handler object
- *
- * @field `Router.push`
- * @field `Router.replace`
- * @field `Router.go`
- * @field `Router.back`
- * @field `Router.forward`
- * @field `Router.current`
- */
 export function useRouter(): Router {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleTo = useCallback(
-    (to: string | RouterOptions) => {
-      if (typeof to === 'object') {
-        // 允许不提供 path 和 name
-        if (!to.path && !to.name) {
-          to.path = location.pathname;
-        }
-
-        // 如果提供了 path，params 会被忽略
-        if (to.path && to.params) {
-          to.params = undefined;
-        }
-      }
-
-      return to;
-    },
-    [location.pathname],
-  );
-
-  const getNavigateOptions = useCallback(
-    (to: string | RouterOptions): NavigateOptions | undefined => {
-      if (typeof to === 'string') return undefined;
-      return to;
-    },
-    [],
-  );
+  const getNavigateOptions = useCallback((to: string | RouterOptions): NavigateOptions | undefined => {
+    if (typeof to === 'string') return undefined;
+    const { replace, ...opts } = to;
+    return opts;
+  }, []);
 
   const router = useMemo<Router>(
     () => ({
       push: (to) => {
-        return navigate(buildFullPath(handleTo(to)), getNavigateOptions(to));
+        const normalized = typeof to === 'string' ? to : normalizeRouterOptions(to, location.pathname);
+        return navigate(buildFullPath(normalized, location.pathname), getNavigateOptions(to));
       },
 
       replace: (to) => {
-        return navigate(buildFullPath(handleTo(to)), getNavigateOptions(to));
+        const normalized = typeof to === 'string' ? to : normalizeRouterOptions(to, location.pathname);
+        const opts = getNavigateOptions(to) ?? {};
+        return navigate(buildFullPath(normalized, location.pathname), {
+          ...opts,
+          replace: true,
+        });
       },
 
       go: (delta) => {
@@ -88,10 +66,26 @@ export function useRouter(): Router {
         return navigate(1);
       },
 
+      resolve: (to) => {
+        const resolved = buildResolvedTo(to, location.pathname);
+        const fullPath = `${resolved.pathname}${resolved.search}${resolved.hash}`;
+        const query = resolved.search
+          ? Object.fromEntries(new URLSearchParams(resolved.search.slice(1)).entries())
+          : {};
+        return {
+          href: fullPath,
+          path: resolved.pathname,
+          fullPath,
+          query,
+          hash: resolved.hash,
+        };
+      },
+
       current: location.pathname + location.search + location.hash,
     }),
-    [location.pathname, location.search, location.hash, navigate, handleTo, getNavigateOptions],
+    [location.pathname, location.search, location.hash, navigate, getNavigateOptions],
   );
 
   return router;
 }
+
