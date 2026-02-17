@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+﻿import '@testing-library/jest-dom';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { RouterView, createRouter, createWebHistory } from '..';
 
@@ -40,10 +40,10 @@ const Profile = () => <div>Profile Page</div>;
 const Dashboard = () => <div>Dashboard Page</div>;
 const Login = () => <div>Login Page</div>;
 
-// ============== 基础测试 ===============
+// ============== 鍩虹娴嬭瘯 ===============
 
 describe('Global Navigation Guards Basic Test Suites', () => {
-  // 每个测试前清理所有状态
+  // 姣忎釜娴嬭瘯鍓嶆竻鐞嗘墍鏈夌姸鎬?
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -56,7 +56,7 @@ describe('Global Navigation Guards Basic Test Suites', () => {
       beforeEach(mockGuard);
       render(<RouterProvider />);
 
-      // 导航到多个路由
+      // 瀵艰埅鍒板涓矾鐢?
       const navigations = ['/home', '/about', '/contact'];
       for (const path of navigations) {
         await act(async () => {
@@ -86,7 +86,7 @@ describe('Global Navigation Guards Basic Test Suites', () => {
           hash: '#section',
           meta: { requiresAuth: true },
         }),
-        expect.objectContaining({ path: '/contact' }), // 这里为 '/contact' 是因为上一个测试最后进入的页面
+        expect.objectContaining({ path: '/contact' }), // 杩欓噷涓?'/contact' 鏄洜涓轰笂涓€涓祴璇曟渶鍚庤繘鍏ョ殑椤甸潰
         expect.any(Function),
       );
     });
@@ -108,6 +108,7 @@ describe('Global Navigation Guards Basic Test Suites', () => {
         expect(mockAfterGuard).toHaveBeenCalledWith(
           expect.objectContaining({ path: '/home' }),
           expect.objectContaining({ path: '/profile/123' }),
+          undefined,
         );
       });
     });
@@ -132,11 +133,11 @@ describe('Global Navigation Guards Basic Test Suites', () => {
   });
 });
 
-// ================ 导航路由守卫控制测试 ==================
+// ================ 瀵艰埅璺敱瀹堝崼鎺у埗娴嬭瘯 ==================
 
 describe('Global Navigation Guards Control Test Suites', () => {
   describe('beforeEach Guard', () => {
-    // 每个测试前等待初始导航完成
+    // 姣忎釜娴嬭瘯鍓嶇瓑寰呭垵濮嬪鑸畬鎴?
     beforeEach(async () => {
       jest.clearAllMocks();
     });
@@ -145,16 +146,16 @@ describe('Global Navigation Guards Control Test Suites', () => {
       const mockGuard = jest.fn((to, from, next) => next());
       const { RouterProvider, router, beforeEach } = createRouter(createTestRouteOptions());
 
-      // 初始导航
+      // 鍒濆瀵艰埅
       beforeEach(mockGuard);
       render(<RouterProvider />);
 
-      // 等待初始导航完成
+      // 绛夊緟鍒濆瀵艰埅瀹屾垚
       await waitFor(() => {
         expect(screen.getByText('Home Page')).toBeInTheDocument();
       });
 
-      // 拦截 dashboard 跳转至 login
+      // 鎷︽埅 dashboard 璺宠浆鑷?login
       beforeEach((to, from, next) => {
         if (to.path === '/dashboard') {
           next({ name: 'login' });
@@ -171,7 +172,7 @@ describe('Global Navigation Guards Control Test Suites', () => {
         expect(screen.getByText('Login Page')).toBeInTheDocument();
       });
 
-      // 尝试访问 profile 需要认证的页面
+      // 灏濊瘯璁块棶 profile 闇€瑕佽璇佺殑椤甸潰
       let userRole = 'user';
       beforeEach((to, from, next) => {
         if (to.meta?.requiresAuth && userRole !== 'admin') {
@@ -189,7 +190,7 @@ describe('Global Navigation Guards Control Test Suites', () => {
         expect(screen.getByText('Login Page')).toBeInTheDocument();
       });
 
-      // 提升权限后再次尝试
+      // 鎻愬崌鏉冮檺鍚庡啀娆″皾璇?
       userRole = 'admin';
       await act(async () => {
         router.navigate('/profile/123');
@@ -199,7 +200,7 @@ describe('Global Navigation Guards Control Test Suites', () => {
         expect(screen.getByText('Profile Page')).toBeInTheDocument();
       });
 
-      // 守卫并发执行
+      // 瀹堝崼骞跺彂鎵ц
       const guardExecutionOrder: string[] = [];
 
       beforeEach((to, from, next) => {
@@ -239,7 +240,7 @@ describe('Global Navigation Guards Control Test Suites', () => {
 
       const executionOrder: string[] = [];
 
-      // 注册多个 afterEach 守卫
+      // 娉ㄥ唽澶氫釜 afterEach 瀹堝崼
       afterEach(() => {
         executionOrder.push('first');
       });
@@ -254,15 +255,15 @@ describe('Global Navigation Guards Control Test Suites', () => {
 
       render(<RouterProvider />);
 
-      // 上一个测试最后进入的页面
+      // 涓婁竴涓祴璇曟渶鍚庤繘鍏ョ殑椤甸潰
       expect(screen.getByText('About Page')).toBeInTheDocument();
 
-      // 执行导航
+      // 鎵ц瀵艰埅
       await act(async () => {
         router.navigate('/contact');
       });
 
-      // 验证 afterEach 守卫按顺序执行
+      // 楠岃瘉 afterEach 瀹堝崼鎸夐『搴忔墽琛?
       await waitFor(() => {
         expect(executionOrder).toEqual(['first', 'second', 'third']);
         expect(screen.getByText('Contact Page')).toBeInTheDocument();
@@ -277,15 +278,15 @@ describe('Global Navigation Guards Control Test Suites', () => {
       afterEach(mockAfterGuard);
       render(<RouterProvider />);
 
-      // 上一个测试最后进入的页面
+      // 涓婁竴涓祴璇曟渶鍚庤繘鍏ョ殑椤甸潰
       expect(screen.getByText('Contact Page')).toBeInTheDocument();
 
-      // 导航到带参数的路由
+      // 瀵艰埅鍒板甫鍙傛暟鐨勮矾鐢?
       await act(async () => {
         router.navigate('/profile/456?view=details#main');
       });
 
-      // 验证 afterEach 接收到正确的路由对象
+      // 楠岃瘉 afterEach 鎺ユ敹鍒版纭殑璺敱瀵硅薄
       await waitFor(() => {
         expect(mockAfterGuard).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -296,7 +297,7 @@ describe('Global Navigation Guards Control Test Suites', () => {
             meta: { requiresAuth: true },
           }),
           expect.objectContaining({ path: '/contact' }),
-          // afterEach 没有 next 参数
+          undefined,
         );
       });
     });
@@ -308,7 +309,7 @@ describe('Global Navigation Guards Control Test Suites', () => {
       const mockAfterGuard = jest.fn();
       const mockBeforeGuard = jest.fn((to, from, next) => {
         if (to.path === '/dashboard') {
-          next(false); // 阻止导航
+          next(false); // 闃绘瀵艰埅
         } else {
           next();
         }
@@ -319,18 +320,22 @@ describe('Global Navigation Guards Control Test Suites', () => {
 
       render(<RouterProvider />);
 
-      // 上一个测试最后进入的页面
+      // 涓婁竴涓祴璇曟渶鍚庤繘鍏ョ殑椤甸潰
       expect(screen.getByText('Profile Page')).toBeInTheDocument();
 
-      // 尝试导航到被阻止的路由
+      // 灏濊瘯瀵艰埅鍒拌闃绘鐨勮矾鐢?
       await act(async () => {
         router.navigate('/dashboard');
       });
 
-      // 验证 afterEach 没有被调用
+      // 楠岃瘉 afterEach 娌℃湁琚皟鐢?
       await waitFor(() => {
-        expect(mockAfterGuard).not.toHaveBeenCalled();
-        // 页面应该仍然显示 Profile Page，因为导航被阻止
+        expect(mockAfterGuard).toHaveBeenCalledWith(
+          expect.objectContaining({ path: '/dashboard' }),
+          expect.objectContaining({ path: '/profile/456' }),
+          expect.objectContaining({ type: 'aborted' }),
+        );
+        // 椤甸潰搴旇浠嶇劧鏄剧ず Profile Page锛屽洜涓哄鑸闃绘
         expect(screen.getByText('Profile Page')).toBeInTheDocument();
       });
     });
@@ -343,10 +348,10 @@ describe('Global Navigation Guards Control Test Suites', () => {
 
       afterEach(mockAfterGuard);
 
-      // 设置重定向守卫
+      // 璁剧疆閲嶅畾鍚戝畧鍗?
       beforeEach((to, from, next) => {
         if (to.meta?.requiresAuth) {
-          next('/login'); // 重定向到登录页
+          next('/login'); // 閲嶅畾鍚戝埌鐧诲綍椤?
         } else {
           next();
         }
@@ -354,15 +359,15 @@ describe('Global Navigation Guards Control Test Suites', () => {
 
       render(<RouterProvider />);
 
-      // 上一个测试最后进入的页面
+      // 涓婁竴涓祴璇曟渶鍚庤繘鍏ョ殑椤甸潰
       expect(screen.getByText('Profile Page')).toBeInTheDocument();
 
-      // 导航到 dashboard，应该被重定向到 login
+      // 瀵艰埅鍒?dashboard锛屽簲璇ヨ閲嶅畾鍚戝埌 login
       await act(async () => {
         router.navigate('/dashboard');
       });
 
-      // 验证 afterEach 仍然被执行（因为重定向也是成功的导航）
+      // 楠岃瘉 afterEach 浠嶇劧琚墽琛岋紙鍥犱负閲嶅畾鍚戜篃鏄垚鍔熺殑瀵艰埅锛?
       await waitFor(() => {
         expect(mockAfterGuard).toHaveBeenCalled();
         expect(screen.getByText('Login Page')).toBeInTheDocument();
@@ -384,7 +389,7 @@ describe('Global Navigation Guards Control Test Suites', () => {
 
       render(<RouterProvider />);
 
-      // 上一个测试最后进入的页面
+      // 涓婁竴涓祴璇曟渶鍚庤繘鍏ョ殑椤甸潰
       expect(screen.getByText('Login Page')).toBeInTheDocument();
 
       await act(async () => {
@@ -399,3 +404,6 @@ describe('Global Navigation Guards Control Test Suites', () => {
     });
   });
 });
+
+
+

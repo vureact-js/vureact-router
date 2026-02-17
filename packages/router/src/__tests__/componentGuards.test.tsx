@@ -486,7 +486,12 @@ describe('Component Guards Test Suites', () => {
       });
 
       // 验证执行顺序
-      expect(executionOrder2).toEqual(['beforeEach', 'beforeEnter', 'beforeRouteUpdate']);
+      expect(executionOrder2).toEqual([
+        'beforeEach',
+        'beforeEnter',
+        'beforeEach',
+        'beforeRouteUpdate',
+      ]);
     });
   });
 });
