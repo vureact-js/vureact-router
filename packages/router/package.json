@@ -7,14 +7,22 @@
   "types": "./dist/types/vureact-router.d.ts",
   "author": "Ryan John",
   "license": "MIT",
-  "description": "Vue Router 4.x Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)",
+  "description": "Vue Router 4.x style routing library for React 18+ with full TypeScript support, navigation guards, async components, and familiar API for Vue developers transitioning to React.",
   "keywords": [
     "react",
     "react-router",
     "react-router-dom",
+    "vue-router",
+    "router",
+    "routing",
+    "navigation",
     "react-vue-like",
     "vureact-router",
-    "react-vue-router-adapter"
+    "react-vue-router-adapter",
+    "typescript",
+    "navigation-guards",
+    "async-components",
+    "code-splitting"
   ],
   "exports": {
     ".": {
@@ -47,5 +55,8 @@
     "react-dom": ">=18.2.0",
     "react-router-dom": ">=7.9.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }

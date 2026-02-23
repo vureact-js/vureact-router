@@ -1,0 +1,195 @@
+:root {
+  --bg: #f4f1ec;
+  --panel: #fffdf8;
+  --panel-strong: #fffaf0;
+  --text: #1f2428;
+  --muted: #5d6470;
+  --line: #ded7cb;
+  --brand: #0f6d57;
+  --brand-soft: #d6efe7;
+  --warn: #8d3d2d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background:
+    radial-gradient(circle at 15% 15%, #fef4dc 0, transparent 32%),
+    radial-gradient(circle at 85% 8%, #d8f0eb 0, transparent 26%),
+    var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+code {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fbf8f2;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  padding: 1.25rem 1rem;
+  border-right: 1px solid var(--line);
+  background: linear-gradient(180deg, #fef6e6 0%, #f6f7ef 100%);
+}
+
+.app-sidebar h1 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.app-sidebar p {
+  margin: 0.4rem 0 1rem;
+  color: var(--muted);
+}
+
+.app-nav {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.app-main {
+  padding: 1.1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.app-header {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+
+.app-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.app-header p {
+  margin: 0.55rem 0 0.8rem;
+  color: var(--muted);
+}
+
+.content-card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.quick-links,
+.demo-actions,
+.demo-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.router-link-active {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.router-link-exact-active {
+  outline: 1px solid var(--brand);
+}
+
+.link-inactive {
+  color: var(--muted);
+}
+
+.app-nav a,
+.quick-links a,
+.demo-links a {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+}
+
+.demo-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.demo-panel {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel-strong);
+  padding: 0.75rem;
+}
+
+.demo-panel h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.demo-panel p {
+  margin: 0 0 0.4rem;
+  color: var(--muted);
+}
+
+button {
+  border: 1px solid #b8b0a4;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #fbf8f2;
+}
+
+.danger {
+  border-color: #be8f84;
+  color: var(--warn);
+}
+
+.log {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.log li {
+  margin: 0.2rem 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.ok {
+  color: var(--brand);
+}
+
+.warn {
+  color: var(--warn);
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
