@@ -21,7 +21,7 @@ The examples do not depend on published npm packages; instead, they directly poi
 
 This allows immediate joint debugging and verification of changes made to `packages/router/src` in the examples.
 
-## Six Core Examples
+## Seven Core Examples
 
 1. `01 Basic Routing`: Basic routing, nested routing, and 404 fallback.
 2. `02 RouterLink`: String/object-based navigation, `query/hash`, `customRender`, `replace`.
@@ -29,6 +29,7 @@ This allows immediate joint debugging and verification of changes made to `packa
 4. `04 Global Guards`: `beforeEach`, `beforeResolve`, `afterEach`, `onError`, with display of navigation failure information.
 5. `05 Component Guards`: `useBeforeRouteLeave`, `useBeforeRouteUpdate`, `useBeforeRouteEnter`.
 6. `06 Dynamic Routing`: `addRoute`, `hasRoute`, `resolve`, and navigation after runtime injection.
+7. `07 Doc Examples`: standalone pages mapped from documentation chapters (`examples/src/pages/doc-examples`).
 
 ## Positioning
 

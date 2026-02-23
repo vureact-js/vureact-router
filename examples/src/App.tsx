@@ -4,6 +4,7 @@ function App() {
   const route = useRoute();
 
   const summaries: Array<{ key: string; summary: string }> = [
+    { key: '/doc-examples', summary: '文档章节拆分后的独立示例页面集合' },
     { key: '/basic-routing', summary: '基础路由、嵌套路由与 404 兜底' },
     { key: '/router-link', summary: 'RouterLink 多种跳转写法与 customRender' },
     { key: '/use-router-route', summary: 'useRouter / useRoute 交互式展示' },
@@ -43,6 +44,9 @@ function App() {
           <RouterLink to="/dynamic-routes" inActiveClassName="link-inactive">
             06 动态路由
           </RouterLink>
+          <RouterLink to="/doc-examples" inActiveClassName="link-inactive">
+            07 文档示例集
+          </RouterLink>
         </nav>
       </aside>
       <main className="app-main">
@@ -60,6 +64,9 @@ function App() {
             </RouterLink>
             <RouterLink to="/global-guards/public" inActiveClassName="link-inactive">
               守卫目标页
+            </RouterLink>
+            <RouterLink to="/doc-examples" inActiveClassName="link-inactive">
+              文档示例
             </RouterLink>
           </div>
         </header>

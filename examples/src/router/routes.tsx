@@ -12,6 +12,29 @@ import GlobalGuardsDemo, { GlobalGuardTarget } from '../pages/GlobalGuardsDemo';
 import HomePage from '../pages/HomePage';
 import RouterLinkDemo from '../pages/RouterLinkDemo';
 import UseRouterRouteDemo from '../pages/UseRouterRouteDemo';
+import DocComponentGuardsExample, {
+  DocGuardEnter,
+  DocGuardForm,
+  DocGuardUser,
+} from '../pages/doc-examples/DocComponentGuardsExample';
+import DocDynamicRoutingExample, {
+  DocDynamicParentShell,
+} from '../pages/doc-examples/DocDynamicRoutingExample';
+import DocExamplesHome from '../pages/doc-examples/DocExamplesHome';
+import DocGlobalGuardsExample, {
+  DocGlobalLogin,
+  DocGlobalProtected,
+  DocGlobalPublic,
+} from '../pages/doc-examples/DocGlobalGuardsExample';
+import DocHistoryModesExample from '../pages/doc-examples/DocHistoryModesExample';
+import DocIntroductionExample from '../pages/doc-examples/DocIntroductionExample';
+import DocQuickStartExample from '../pages/doc-examples/DocQuickStartExample';
+import DocRouterLinkExample from '../pages/doc-examples/DocRouterLinkExample';
+import DocUseRouterUseRouteExample from '../pages/doc-examples/DocUseRouterUseRouteExample';
+import DocBasicRoutingExample, {
+  DocBasicAlpha,
+  DocBasicBeta,
+} from '../pages/doc-examples/DocBasicRoutingExample';
 
 const routes: RouteConfig[] = [
   {
@@ -108,6 +131,61 @@ const routes: RouteConfig[] = [
         name: 'dynamic-runtime-shell',
         component: <RouterView />,
         children: [],
+      },
+      { path: 'doc-examples', name: 'doc-examples-home', component: <DocExamplesHome /> },
+      { path: 'doc-examples/introduction', name: 'doc-introduction', component: <DocIntroductionExample /> },
+      { path: 'doc-examples/quick-start', name: 'doc-quick-start', component: <DocQuickStartExample /> },
+      {
+        path: 'doc-examples/basic-routing',
+        name: 'doc-basic-routing',
+        component: <DocBasicRoutingExample />,
+        children: [
+          { path: 'alpha', name: 'doc-basic-alpha', component: <DocBasicAlpha /> },
+          { path: 'beta', name: 'doc-basic-beta', component: <DocBasicBeta /> },
+          { path: '*', name: 'doc-basic-fallback', component: <div>doc basic fallback</div> },
+        ],
+      },
+      { path: 'doc-examples/router-link', name: 'doc-router-link', component: <DocRouterLinkExample /> },
+      {
+        path: 'doc-examples/use-router-use-route',
+        name: 'doc-use-router-use-route',
+        component: <DocUseRouterUseRouteExample />,
+      },
+      {
+        path: 'doc-examples/global-guards',
+        name: 'doc-global-guards',
+        component: <DocGlobalGuardsExample />,
+        children: [
+          { path: 'public', name: 'doc-global-public', component: <DocGlobalPublic /> },
+          { path: 'protected', name: 'doc-global-protected', component: <DocGlobalProtected /> },
+          { path: 'login', name: 'doc-global-login', component: <DocGlobalLogin /> },
+        ],
+      },
+      {
+        path: 'doc-examples/component-guards',
+        name: 'doc-component-guards',
+        component: <DocComponentGuardsExample />,
+        children: [
+          { path: 'form', name: 'doc-component-form', component: <DocGuardForm /> },
+          { path: 'user/:id', name: 'doc-component-user', component: <DocGuardUser /> },
+          { path: 'enter', name: 'doc-component-enter', component: <DocGuardEnter /> },
+        ],
+      },
+      {
+        path: 'doc-examples/dynamic-routing',
+        name: 'doc-dynamic-routing',
+        component: <DocDynamicRoutingExample />,
+      },
+      {
+        path: 'doc-examples/dynamic-routing/runtime',
+        name: 'doc-dynamic-parent',
+        component: <DocDynamicParentShell />,
+        children: [],
+      },
+      {
+        path: 'doc-examples/history-modes',
+        name: 'doc-history-modes',
+        component: <DocHistoryModesExample />,
       },
       { path: '*', name: 'not-found', component: <AppNotFound /> },
     ],

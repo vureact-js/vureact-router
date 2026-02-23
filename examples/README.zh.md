@@ -21,7 +21,7 @@ npm run dev
 
 这样在修改 `packages/router/src` 后，示例可立即联调验证。
 
-## 六大核心示例
+## 七大核心示例
 
 1. `01 基础路由`：基础路由、嵌套路由、404 兜底。
 2. `02 RouterLink`：字符串/对象跳转、`query/hash`、`customRender`、`replace`。
@@ -29,6 +29,7 @@ npm run dev
 4. `04 全局守卫`：`beforeEach`、`beforeResolve`、`afterEach`、`onError`，并展示导航失败信息。
 5. `05 组件守卫`：`useBeforeRouteLeave`、`useBeforeRouteUpdate`、`useBeforeRouteEnter`。
 6. `06 动态路由`：`addRoute`、`hasRoute`、`resolve` 与运行时注入后跳转。
+7. `07 文档示例集`：按官网教程章节拆分的独立页面示例（`examples/src/pages/doc-examples`）。
 
 ## 定位
 

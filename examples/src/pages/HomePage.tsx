@@ -16,6 +16,7 @@ function HomePage() {
           <RouterLink to="/global-guards">04 全局守卫</RouterLink>
           <RouterLink to="/component-guards">05 组件守卫</RouterLink>
           <RouterLink to="/dynamic-routes">06 动态路由</RouterLink>
+          <RouterLink to="/doc-examples">07 文档示例集</RouterLink>
         </div>
       </div>
     </div>
