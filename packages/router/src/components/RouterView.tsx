@@ -11,13 +11,12 @@ export interface RouterViewProps {
 export default memo(RouterView);
 
 /**
- * used to render route components, based on `react-router-dom`.
+ * React adapter for Vue Router's component `<router-view>`.
  *
- * @see https://router-vureact.vercel.app/en/router-view-custom
- *
- * @param customRender customize the display mode of route components after rendering.
+ * @see https://router-vureact.vercel.app/api/router-components.html
  */
 function RouterView({ customRender }: RouterViewProps): ReactNode {
+  // 手动获取路由试图
   const outlet = useOutlet();
   const route = useRoute();
 

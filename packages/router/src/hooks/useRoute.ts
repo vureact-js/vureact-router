@@ -24,6 +24,10 @@ export interface RouteLocation {
   matched: RouteLocationMatched[];
 }
 
+/**
+ * React adapter for Vue Router's useRoute.
+ * @see https://router-vureact.vercel.app/guide/use-router-and-use-route.html
+ */
 export function useRoute(): RouteLocation {
   const { hash, search, pathname, state } = useLocation();
   const context = useOptionalRouterContext();
@@ -62,7 +66,8 @@ export function useRoute(): RouteLocation {
   }, {});
 
   const latestTransition = guardManager?.getLatestTransition();
-  const redirectedFrom = latestTransition?.failure?.type === 'redirected' ? latestTransition.from.fullPath : undefined;
+  const redirectedFrom =
+    latestTransition?.failure?.type === 'redirected' ? latestTransition.from.fullPath : undefined;
 
   return {
     name,
@@ -77,4 +82,3 @@ export function useRoute(): RouteLocation {
     matched,
   };
 }
-

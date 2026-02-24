@@ -10,6 +10,8 @@ import { buildFullPath } from '../utils';
  *
  * In React Hooks this guard runs after component mount and does not expose
  * Vue-style component instance callback semantics.
+ *
+ * @see https://router-vureact.vercel.app/guide/component-guards.html
  */
 export function useBeforeRouteEnter(fn: ComponentGuards['guard']) {
   const guardManager = useGuardManager();

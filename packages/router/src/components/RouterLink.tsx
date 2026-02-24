@@ -36,6 +36,10 @@ export type CustomRenderProps = {
 
 export default memo(RouterLink);
 
+/**
+ * React adapter for Vue Router's component `<router-link>`.
+ * @see https://router-vureact.vercel.app/guide/router-link.html
+ */
 function RouterLink(props: PropsWithChildren<RouterLinkProps>) {
   const {
     to,
@@ -51,16 +55,20 @@ function RouterLink(props: PropsWithChildren<RouterLinkProps>) {
     ...restProps
   } = props;
 
+  // 获取运行时配置，用于获取默认的激活类名
   const runtimeConfig = getRuntimeRouterConfig();
 
+  // 处理 to 属性：如果是字符串，直接作为导航链接；如果是对象，需要进一步处理
   const navLink = useMemo(() => (typeof to === 'string' ? to : ''), [to]);
 
+  // 处理对象类型的 to 属性，构建 react-router-dom 的导航选项
   const navOptions = useMemo<To & { state?: any }>(() => {
     if (typeof to !== 'object') {
       return {};
     }
 
     const normalized = { ...to };
+    // 如果同时有 path 和 params，优先使用 path，清除 params
     if (normalized.path && normalized.params) {
       normalized.params = undefined;
     }
@@ -68,32 +76,37 @@ function RouterLink(props: PropsWithChildren<RouterLinkProps>) {
     return {
       hash: normalized.hash,
       state: normalized.state,
-      pathname: resolvedPath(normalized),
-      search: buildSearchParams(normalized.query),
+      pathname: resolvedPath(normalized), // 解析路径，处理动态参数
+      search: buildSearchParams(normalized.query), // 构建查询字符串
     };
   }, [to]);
 
   const navigate = useNavigate();
+  // 解析路径，确保路径是绝对路径
   const resolved = useResolvedPath(navLink || navOptions);
 
   const { state } = navOptions;
 
+  // 检查当前链接是否精确匹配（完全匹配路径）
   const isExactActive = Boolean(useMatch({ path: resolved.pathname, end: true }));
+  // 检查当前链接是否激活（路径前缀匹配）
   const isActive = Boolean(useMatch({ path: resolved.pathname, end: false }));
 
+  // 确定最终的激活类名：优先使用 props 中的类名，否则使用运行时配置的默认类名
   const finalExactActiveClass =
     exactActiveClassName || exactActiveClass || runtimeConfig.linkExactActiveClass;
   const finalActiveClass = activeClassName || activeClass || runtimeConfig.linkActiveClass;
 
+  // 构建最终的 className：根据激活状态添加相应的类名
   const className = useMemo(
     () =>
       [
         restProps.className,
-        isExactActive ? finalExactActiveClass : '',
-        isActive ? finalActiveClass : '',
-        !isActive && !isExactActive ? inActiveClassName : '',
+        isExactActive ? finalExactActiveClass : '', // 精确激活时添加精确激活类
+        isActive ? finalActiveClass : '', // 激活时添加激活类
+        !isActive && !isExactActive ? inActiveClassName : '', // 未激活时添加非激活类
       ]
-        .filter(Boolean)
+        .filter(Boolean) // 过滤空字符串
         .join(' '),
     [
       restProps.className,
@@ -105,6 +118,7 @@ function RouterLink(props: PropsWithChildren<RouterLinkProps>) {
     ],
   );
 
+  // 构建传递给 react-router-dom Link 组件的 props
   const linkProps = useMemo(
     () => ({
       to: navLink || navOptions,
@@ -116,8 +130,11 @@ function RouterLink(props: PropsWithChildren<RouterLinkProps>) {
     [className, navLink, navOptions, replace, restProps, state],
   );
 
+  // 构建自定义渲染函数的参数
   const customRenderProps = useMemo(() => {
+    // 构建完整的 href 字符串（包含路径、查询参数和哈希）
     const href = navLink || resolved.pathname + (resolved.search ?? '') + (resolved.hash ?? '');
+    // 创建导航回调函数
     const cb = () => navigate(navLink || navOptions, { replace, state });
     return {
       href,
@@ -127,7 +144,9 @@ function RouterLink(props: PropsWithChildren<RouterLinkProps>) {
     };
   }, [isActive, isExactActive, navLink, navOptions, navigate, replace, resolved, state]);
 
+  // 优先使用 customRender，其次使用 custom（兼容性别名）
   const customRenderer = customRender ?? custom;
 
+  // 如果有自定义渲染函数，使用它；否则使用默认的 Link 组件
   return customRenderer?.(customRenderProps) || <Link {...linkProps}>{children}</Link>;
 }

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { type NavigateOptions, type Params, useLocation, useNavigate } from 'react-router-dom';
-import { buildFullPath, buildResolvedTo, normalizeRouterOptions, parseQueryString } from '../utils';
+import { buildFullPath, buildResolvedTo, normalizeRouterOptions } from '../utils';
 
 export interface Router {
   push: (to: string | RouterOptions) => void | Promise<void>;
@@ -28,25 +28,34 @@ export interface RouterOptions extends NavigateOptions {
   query?: Record<string, any>;
 }
 
+/**
+ * React adapter for Vue Router's useRouter.
+ * @see https://router-vureact.vercel.app/guide/use-router-and-use-route.html
+ */
 export function useRouter(): Router {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const getNavigateOptions = useCallback((to: string | RouterOptions): NavigateOptions | undefined => {
-    if (typeof to === 'string') return undefined;
-    const { replace, ...opts } = to;
-    return opts;
-  }, []);
+  const getNavigateOptions = useCallback(
+    (to: string | RouterOptions): NavigateOptions | undefined => {
+      if (typeof to === 'string') return undefined;
+      const { replace, ...opts } = to;
+      return opts;
+    },
+    [],
+  );
 
   const router = useMemo<Router>(
     () => ({
       push: (to) => {
-        const normalized = typeof to === 'string' ? to : normalizeRouterOptions(to, location.pathname);
+        const normalized =
+          typeof to === 'string' ? to : normalizeRouterOptions(to, location.pathname);
         return navigate(buildFullPath(normalized, location.pathname), getNavigateOptions(to));
       },
 
       replace: (to) => {
-        const normalized = typeof to === 'string' ? to : normalizeRouterOptions(to, location.pathname);
+        const normalized =
+          typeof to === 'string' ? to : normalizeRouterOptions(to, location.pathname);
         const opts = getNavigateOptions(to) ?? {};
         return navigate(buildFullPath(normalized, location.pathname), {
           ...opts,
@@ -88,4 +97,3 @@ export function useRouter(): Router {
 
   return router;
 }
-

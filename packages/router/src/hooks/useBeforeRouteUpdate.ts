@@ -3,11 +3,8 @@ import { useRouterContext } from '../context/RouterContext';
 import { type ComponentGuards } from '../guards/guardManager';
 
 /**
- * will trigger when the current route is updated, and only for route parameter changes.
- *
- * @see https://router-vureact.vercel.app/en/navigation-guards
- *
- * @param fn update guard
+ * React adapter for Vue Router's beforeRouteUpdate.
+ * @see https://router-vureact.vercel.app/guide/component-guards.html
  */
 export function useBeforeRouteUpdate(fn: ComponentGuards['guard']) {
   const { guardManager } = useRouterContext();

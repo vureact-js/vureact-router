@@ -10,6 +10,7 @@ export * from './creator/createRouter';
 export * from './hooks/useBeforeRouteEnter';
 export * from './hooks/useBeforeRouteLeave';
 export * from './hooks/useBeforeRouteUpdate';
+export * from './hooks/useLink';
 export * from './hooks/useRoute';
 export * from './hooks/useRouter';
 export * from './navigationFailure';

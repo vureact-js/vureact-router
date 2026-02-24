@@ -3,11 +3,8 @@ import { useRouterContext } from '../context/RouterContext';
 import { type ComponentGuards } from '../guards/guardManager';
 
 /**
- * will trigger when leaving the current route, prior to all other guards.
- *
- * @see https://router-vureact.vercel.app/en/navigation-guards
- *
- * @param fn leave guard
+ * React adapter for Vue Router's beforeRouteLeave.
+ * @see https://router-vureact.vercel.app/guide/component-guards.html
  */
 export function useBeforeRouteLeave(fn: ComponentGuards['guard']) {
   const { guardManager } = useRouterContext();
