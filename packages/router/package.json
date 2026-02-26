@@ -2,8 +2,8 @@
   "name": "@vureact/router",
   "version": "1.0.0",
   "type": "module",
-  "main": "./dist/cjs/vureact-router.cjs",
-  "module": "./dist/esm/vureact-router.mjs",
+  "main": "./dist/cjs/vureact-router.js",
+  "module": "./dist/esm/vureact-router.esm.js",
   "types": "./dist/types/vureact-router.d.ts",
   "author": "Ryan John",
   "license": "MIT",
@@ -27,8 +27,8 @@
   "exports": {
     ".": {
       "types": "./dist/types/vureact-router.d.ts",
-      "import": "./dist/esm/vureact-router.mjs",
-      "require": "./dist/cjs/vureact-router.cjs"
+      "import": "./dist/esm/vureact-router.esm.js",
+      "require": "./dist/cjs/vureact-router.js"
     }
   },
   "files": [
