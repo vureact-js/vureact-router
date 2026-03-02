@@ -1,6 +1,6 @@
 {
   "name": "@vureact/router",
-  "version": "1.0.0",
+  "version": "1.0.0-beta",
   "type": "module",
   "main": "./dist/cjs/vureact-router.js",
   "module": "./dist/esm/vureact-router.esm.js",
