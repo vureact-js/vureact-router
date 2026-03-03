@@ -1,5 +1,7 @@
 # @vureact/router
 
+English | [简体中文](./README.zh.md)
+
 Vue Router 4.x Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)
 
 ## ✨ Features

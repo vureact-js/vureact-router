@@ -1,11 +1,11 @@
 {
   "name": "@vureact/router",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/cjs/vureact-router.js",
   "module": "./dist/esm/vureact-router.esm.js",
   "types": "./dist/types/vureact-router.d.ts",
-  "author": "Ryan John",
+  "author": "Ruihong Zhong (Ryan John)",
   "license": "MIT",
   "description": "Vue Router 4.x style routing library for React 18+ with full TypeScript support, navigation guards, async components, and familiar API for Vue developers transitioning to React.",
   "keywords": [
@@ -34,11 +34,11 @@
   "files": [
     "dist"
   ],
-  "homepage": "https://router.vureact.top/en",
+  "homepage": "https://router.vureact.top",
   "repository": {
     "type": "git",
     "url": "https://github.com/vureact-js/vureact-router.git",
-    "directory": "tree/master/packages/router"
+    "directory": "packages/router"
   },
   "bugs": {
     "url": "https://github.com/vureact-js/vureact-router/issues"

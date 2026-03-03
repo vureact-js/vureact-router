@@ -1,5 +1,7 @@
 # @vureact/router
 
+简体中文 | [English](./README.md)
+
 Vue Router 4.x 风格的 React 18+ 路由适配器（基于 React Router DOM 7.9+ 封装）
 
 ## ✨ 特性
