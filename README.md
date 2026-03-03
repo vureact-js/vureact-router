@@ -1,5 +1,7 @@
 # Vureact Router
 
+English | [简体中文](./README.zh.md)
+
 A Vue Router 4.x style routing library for React 18+, built on top of React Router DOM 7.9+. Provides familiar Vue Router APIs for developers transitioning from Vue.js to React.
 
 ## 🏗️ Project Structure

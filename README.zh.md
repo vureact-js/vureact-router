@@ -1,5 +1,7 @@
 # Vureact Router
 
+简体中文 | [English](./README.md)
+
 基于 React Router DOM 7.9+ 构建的 Vue Router 4.x 风格 React 18+ 路由库。为从 Vue.js 转向 React 的开发者提供熟悉的 Vue Router API。
 
 ## 🏗️ 项目结构
