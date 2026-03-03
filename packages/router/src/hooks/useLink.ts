@@ -32,7 +32,7 @@ export interface UseLinkReturn {
  * It exposes the same core primitives used by `RouterLink`:
  * target href, active states, and imperative navigation callback.
  *
- * @see https://router-vureact.vercel.app/api/router-hooks.html
+ * @see https://router.vureact.top/api/router-hooks.html
  */
 export function useLink({ to, replace = false }: UseLinkOptions): UseLinkReturn {
   const navLink = useMemo(() => (typeof to === 'string' ? to : ''), [to]);

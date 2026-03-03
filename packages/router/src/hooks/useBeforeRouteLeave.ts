@@ -4,7 +4,7 @@ import { type ComponentGuards } from '../guards/guardManager';
 
 /**
  * React adapter for Vue Router's beforeRouteLeave.
- * @see https://router-vureact.vercel.app/guide/component-guards.html
+ * @see https://router.vureact.top/guide/component-guards.html
  */
 export function useBeforeRouteLeave(fn: ComponentGuards['guard']) {
   const { guardManager } = useRouterContext();

@@ -469,6 +469,6 @@ MIT © [Ryan John](./LICENSE)
 
 - [GitHub Repository](https://github.com/vureact-js/vureact-router)
 - [npm Package](https://www.npmjs.com/package/@vureact/router)
-- [Documentation](https://router-vureact.vercel.app/en)
+- [Documentation](https://router.vureact.top)
 - [Issue Tracker](https://github.com/vureact-js/vureact-router/issues)
 - [Contributing Guidelines](../../CONTRIBUTING.md)

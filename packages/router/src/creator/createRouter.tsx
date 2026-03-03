@@ -102,7 +102,7 @@ const _ROUTE_CONTAINER_ = {
 
 /**
  * React adapter for Vue Router's createRouter.
- * @see https://router-vureact.vercel.app/guide/basic-routing.html
+ * @see https://router.vureact.top/guide/basic-routing.html
  */
 export function createRouter(options: CreateRouterOptions): RouterInstance {
   const {

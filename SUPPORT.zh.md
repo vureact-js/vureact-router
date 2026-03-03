@@ -7,7 +7,7 @@
 ### 文档
 
 - **[README.zh.md](./README.zh.md)** - 项目概述和快速开始
-- **[文档网站](https://router-vureact.vercel.app)** - 完整文档
+- **[文档网站](https://router.vureact.top)** - 完整文档
 - **[示例](./examples/)** - 示例应用
 
 ### 社区支持

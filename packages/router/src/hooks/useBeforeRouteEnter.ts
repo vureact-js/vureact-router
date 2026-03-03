@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGuardManager } from './useGuardManager';
-import { useRoute } from './useRoute';
 import { type ComponentGuards } from '../guards/guardManager';
 import { buildFullPath } from '../utils';
+import { useGuardManager } from './useGuardManager';
+import { useRoute } from './useRoute';
 
 /**
  * Experimental approximation of Vue Router's beforeRouteEnter.
@@ -11,7 +11,7 @@ import { buildFullPath } from '../utils';
  * In React Hooks this guard runs after component mount and does not expose
  * Vue-style component instance callback semantics.
  *
- * @see https://router-vureact.vercel.app/guide/component-guards.html
+ * @see https://router.vureact.top/guide/component-guards.html
  */
 export function useBeforeRouteEnter(fn: ComponentGuards['guard']) {
   const guardManager = useGuardManager();

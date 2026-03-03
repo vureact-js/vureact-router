@@ -30,7 +30,7 @@ export interface RouterOptions extends NavigateOptions {
 
 /**
  * React adapter for Vue Router's useRouter.
- * @see https://router-vureact.vercel.app/guide/use-router-and-use-route.html
+ * @see https://router.vureact.top/guide/use-router-and-use-route.html
  */
 export function useRouter(): Router {
   const navigate = useNavigate();

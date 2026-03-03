@@ -169,7 +169,7 @@ We welcome contributions! Please see our [Contributing Guidelines](./CONTRIBUTIN
 
 ### Package Documentation
 
-- [@vureact/router Documentation](https://router-vureact.vercel.app/en)
+- [@vureact/router Documentation](https://router.vureact.top/en)
 - [@vureact/router README](./packages/router/README.md)
 
 ### Additional Resources
@@ -220,7 +220,7 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ## 🔗 Links
 
-- [Documentation](https://router-vureact.vercel.app/en)
+- [Documentation](https://router.vureact.top/en)
 - [Issue Tracker](https://github.com/vureact-js/vureact-router/issues)
 - [Changelog](./CHANGELOG.md)
 

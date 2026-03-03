@@ -169,7 +169,7 @@ pnpm dev
 
 ### 包文档
 
-- [@vureact/router 官网](https://router-vureact.vercel.app)
+- [@vureact/router 官网](https://router.vureact.top)
 - [@vureact/router README](./packages/router/README.zh.md)
 
 ### 其他资源
@@ -220,7 +220,7 @@ pnpm dev
 
 ## 🔗 链接
 
-- [文档](https://router-vureact.vercel.app/en)
+- [文档](https://router.vureact.top/en)
 - [问题跟踪](https://github.com/vureact-js/vureact-router/issues)
 - [更新日志](./CHANGELOG.md)
 

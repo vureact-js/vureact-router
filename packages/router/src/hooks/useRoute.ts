@@ -26,7 +26,7 @@ export interface RouteLocation {
 
 /**
  * React adapter for Vue Router's useRoute.
- * @see https://router-vureact.vercel.app/guide/use-router-and-use-route.html
+ * @see https://router.vureact.top/guide/use-router-and-use-route.html
  */
 export function useRoute(): RouteLocation {
   const { hash, search, pathname, state } = useLocation();

@@ -23,7 +23,7 @@ export function routerFactory(mode: RouterMode, routes: ReactRoute[], opts?: Mem
 
 /**
  * React adapter for Vue Router's createWebHistory.
- * @see https://router-vureact.vercel.app/guide/history-modes.html
+ * @see https://router.vureact.top/guide/history-modes.html
  */
 export function createWebHistory(): RouterMode {
   return 'history';
@@ -31,7 +31,7 @@ export function createWebHistory(): RouterMode {
 
 /**
  * React adapter for Vue Router's createWebHashHistory.
- * @see https://router-vureact.vercel.app/guide/history-modes.html
+ * @see https://router.vureact.top/guide/history-modes.html
  */
 export function createWebHashHistory(): RouterMode {
   return 'hash';
@@ -39,7 +39,7 @@ export function createWebHashHistory(): RouterMode {
 
 /**
  * React adapter for Vue Router's createMemoryHistory.
- * @see https://router-vureact.vercel.app/guide/history-modes.html
+ * @see https://router.vureact.top/guide/history-modes.html
  */
 export function createMemoryHistory(): RouterMode {
   return 'memoryHistory';

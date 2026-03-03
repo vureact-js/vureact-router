@@ -13,7 +13,7 @@ export default memo(RouterView);
 /**
  * React adapter for Vue Router's component `<router-view>`.
  *
- * @see https://router-vureact.vercel.app/api/router-components.html
+ * @see https://router.vureact.top/api/router-components.html
  */
 function RouterView({ customRender }: RouterViewProps): ReactNode {
   // 手动获取路由试图

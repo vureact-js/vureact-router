@@ -38,7 +38,7 @@ export default memo(RouterLink);
 
 /**
  * React adapter for Vue Router's component `<router-link>`.
- * @see https://router-vureact.vercel.app/guide/router-link.html
+ * @see https://router.vureact.top/guide/router-link.html
  */
 function RouterLink(props: PropsWithChildren<RouterLinkProps>) {
   const {
