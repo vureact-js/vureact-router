@@ -4,6 +4,11 @@
 
 基于 React Router DOM 7.9+ 构建的 Vue Router 4.x 风格 React 18+ 路由库。为从 Vue.js 转向 React 的开发者提供熟悉的 Vue Router API。
 
+[![npm version](https://img.shields.io/npm/v/@vureact/router.svg?style=flat-square)](https://vureact.top/)
+[![npm downloads](https://img.shields.io/npm/dm/@vureact/router.svg?style=flat-square)](https://www.npmjs.com/package/@vureact/router)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![React 18+](https://img.shields.io/badge/React-18%2B-61dafb)](https://reactjs.org/)
+
 ## 🏗️ 项目结构
 
 这是一个使用 pnpm workspaces 的 monorepo 项目。项目结构如下：

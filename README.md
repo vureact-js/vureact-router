@@ -4,6 +4,11 @@ English | [简体中文](./README.zh.md)
 
 A Vue Router 4.x style routing library for React 18+, built on top of React Router DOM 7.9+. Provides familiar Vue Router APIs for developers transitioning from Vue.js to React.
 
+[![npm version](https://img.shields.io/npm/v/@vureact/router.svg?style=flat-square)](https://vureact.top/)
+[![npm downloads](https://img.shields.io/npm/dm/@vureact/router.svg?style=flat-square)](https://www.npmjs.com/package/@vureact/router)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![React 18+](https://img.shields.io/badge/React-18%2B-61dafb)](https://reactjs.org/)
+
 ## 🏗️ Project Structure
 
 This is a monorepo project using pnpm workspaces. The project structure is as follows:
