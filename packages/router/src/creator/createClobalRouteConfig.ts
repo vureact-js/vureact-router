@@ -1,12 +1,31 @@
 import type { RouteObject } from 'react-router-dom';
-import type { RouteConfig } from './createRouter';
+import type { RouteConfig } from './createRouter/types';
 
 export interface GlobalRouteConfig {
+  /**
+   * 原始路由配置
+   */
   source: RouteConfig[];
+  /**
+   * 转换后的 React Router 路由对象
+   */
   converted: RouteObject[];
 }
 
-export const _ROUTE_CONFIG_: GlobalRouteConfig = { source: [], converted: [] };
+/**
+ * 全局路由容器
+ */
+export const _ROUTE_CONFIG_ = createRouteContainer();
+
+/**
+ * 创建局部存储源路由和转换后路由的容器
+ */
+export function createRouteContainer(): GlobalRouteConfig {
+  return {
+    source: [],
+    converted: [],
+  };
+}
 
 export function registerRouteConfig(routes: RouteConfig[], convertedRoutes: RouteObject[]) {
   _ROUTE_CONFIG_.source = routes;

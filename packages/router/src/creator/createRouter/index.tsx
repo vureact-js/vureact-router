@@ -1,21 +1,9 @@
-import { type FunctionComponent, type ReactNode } from 'react';
-import {
-  Navigate,
-  matchRoutes,
-  type DataRouter,
-  type NonIndexRouteObject,
-  type RouteObject,
-  type To,
-} from 'react-router-dom';
-import {
-  type ErrorHandler,
-  type ExclusiveGuards,
-  type GlobalGuards,
-  type GuardWithNextFn,
-} from '../guards/guardManager';
-import type { RouteLocation, RouteLocationMatched } from '../hooks/useRoute';
-import { type RouterOptions as RouterHookOptions } from '../hooks/useRouter';
-import { registerRuntimeRouterConfig, resetRuntimeRouterConfig } from '../runtimeConfig';
+import { createElement, isValidElement, type ReactNode } from 'react';
+import { matchRoutes, Navigate, type DataRouter, type To } from 'react-router-dom';
+import { type ErrorHandler, type GuardWithNextFn } from '../../guards/guardManager';
+import type { RouteLocation, RouteLocationMatched } from '../../hooks/useRoute';
+import { type RouterOptions as RouterHookOptions } from '../../hooks/useRouter';
+import { registerRuntimeRouterConfig, resetRuntimeRouterConfig } from '../../runtimeConfig';
 import {
   buildResolvedTo,
   buildSearchParams,
@@ -24,84 +12,25 @@ import {
   getRouteConfig,
   hasRouteByName,
   isPromise,
+  isReactComponentType,
   parseQueryString,
   resolvedPath,
-} from '../utils';
-import { createAsyncElement, type ComponentLoader } from './createAsyncElement';
+} from '../../utils';
+import { createAsyncElement } from '../createAsyncElement';
 import {
+  createRouteContainer,
   registerRouteConfig,
   resetRouteConfig,
-  type GlobalRouteConfig,
-} from './createClobalRouteConfig';
-import { createWebHashHistory, routerFactory, type RouterMode } from './createHistory';
-import { createRouterProvider } from './createRouterProvider';
+} from '../createClobalRouteConfig';
+import { createWebHashHistory, routerFactory } from '../createHistory';
+import { createRouterProvider } from '../createRouterProvider';
+import { CreateRouterOptions, ReactRoute, RouteConfig, RouterInstance } from './types';
 
-/**
- * 创建路由时的配置选项
- */
-export interface CreateRouterOptions {
-  routes: RouteConfig[]; // 路由配置数组
-  history?: RouterMode; // 路由模式（hash/history/abstract），默认 hash
-  initialEntries?: string[]; // 内存历史初始条目（用于测试）
-  initialIndex?: number; // 内存历史初始索引
-  linkActiveClass?: string; // 激活链接的默认类名
-  linkExactActiveClass?: string; // 精确激活链接的默认类名
-  parseQuery?: (search: string) => Record<string, any>; // 自定义查询字符串解析函数
-  stringifyQuery?: (query: Record<string, any>) => string; // 自定义查询字符串序列化函数
-}
-
-/**
- * 自定义路由配置，扩展自 ExclusiveGuards（路由独享守卫）
- */
-export interface RouteConfig extends ExclusiveGuards {
-  path?: string; // 路由路径（支持动态段）
-  name?: string; // 路由名称，用于命名路由
-  state?: any; // 默认状态
-  sensitive?: boolean; // 是否大小写敏感
-  component?: ComponentType; // 组件（可以是 ReactNode 或异步加载函数）
-  children?: RouteConfig[]; // 子路由
-  linkActiveClassName?: string; // 自定义激活类名（覆盖全局）
-  linkInActiveClassName?: string; // 自定义非激活类名
-  linkExactActiveClassName?: string; // 自定义精确激活类名
-  redirect?: Redirect | RedirectFunc; // 重定向配置
-  loader?: NonIndexRouteObject['loader']; // 路由数据加载器（React Router 的 loader）
-  meta?: { [x: string]: any; loadingComponent?: ReactNode }; // 路由元信息，可包含 loading 组件
-}
-
-type ComponentType = ReactNode | ComponentLoader; // 组件可以是普通节点或加载器函数
-
-type RedirectFunc = (to: RouteConfig) => Redirect; // 动态重定向函数
-
-type Redirect = string | RedirectOptions; // 重定向目标：字符串路径或选项对象
-
-type RedirectOptions = RouterHookOptions; // 重定向选项（与 useRouter 的 push 选项一致）
-
-/**
- * 返回的路由实例接口，包含导航守卫、动态添加路由等方法
- */
-export interface RouterInstance extends GlobalGuards {
-  router: DataRouter; // React Router 的底层 router 实例
-  RouterProvider: FunctionComponent; // 路由提供者组件
-  clearAll: () => void; // 清空所有路由配置和守卫
-  getRoutes: () => Readonly<GlobalRouteConfig>; // 获取当前路由配置（源路由和转换后路由）
-  addRoute: {
-    (route: RouteConfig): void; // 添加根路由
-    (parentName: string, route: RouteConfig): void; // 在指定父路由下添加子路由
-  };
-  hasRoute: (name: string) => boolean; // 检查是否存在指定名称的路由
-  resolve: (to: string | RouterHookOptions) => RouteLocation; // 解析目标位置，返回 RouteLocation 对象
-}
-
-export type ReactRoute = RouteObject; // React Router 的标准路由对象
-
-// 存储源路由和转换后路由的容器（内部使用）
-const _ROUTE_CONTAINER_ = {
-  source: [] as RouteConfig[], // 原始路由配置
-  converted: [] as ReactRoute[], // 转换后的 React Router 路由对象
-};
+export * from './types';
 
 /**
  * React adapter for Vue Router's createRouter.
+ * @see {@link CreateRouterOptions}
  * @see https://router.vureact.top/guide/basic-routing.html
  */
 export function createRouter(options: CreateRouterOptions): RouterInstance {
@@ -123,18 +52,21 @@ export function createRouter(options: CreateRouterOptions): RouterInstance {
     stringifyQuery,
   });
 
+  const routeContainer = createRouteContainer();
+
   // 转换初始路由
   const convertedRoutes = routes.map(convertRoute);
 
   // 保存到内部容器
-  _ROUTE_CONTAINER_.source = routes;
-  _ROUTE_CONTAINER_.converted = convertedRoutes;
+  routeContainer.source = routes;
+  routeContainer.converted = convertedRoutes;
 
   // 注册路由配置到全局，供其他模块（如 useRoute）使用
-  registerRouteConfig(_ROUTE_CONTAINER_.source, _ROUTE_CONTAINER_.converted);
+  registerRouteConfig(routeContainer.source, routeContainer.converted);
 
   // 创建 React Router 的 router 实例
   const router = routerFactory(history, convertedRoutes, memoryRouterOpts);
+
   // 创建路由 Provider 和守卫管理器
   const { guardManager, RouterProvider } = createRouterProvider(router);
 
@@ -154,19 +86,22 @@ export function createRouter(options: CreateRouterOptions): RouterInstance {
     }
 
     // 将路由配置添加到源容器（检查名称唯一性）
-    appendSourceRoute(parentName, route);
+    appendSourceRoute(routeContainer, parentName, route);
 
     // 转换为 React Router 路由对象
     const converted = convertRoute(route);
-    _ROUTE_CONTAINER_.converted.push(converted);
+
+    routeContainer.converted.push(converted);
+
     // 重新注册路由配置（更新全局配置）
-    registerRouteConfig(_ROUTE_CONTAINER_.source, _ROUTE_CONTAINER_.converted);
+    registerRouteConfig(routeContainer.source, routeContainer.converted);
 
     // 调用 React Router 的 patchRoutes 动态添加路由
     if (parentName) {
       router.patchRoutes(parentName, [converted]); // 添加到指定父路由下
       return;
     }
+
     router.patchRoutes(null, [converted]); // 添加到根路由
   };
 
@@ -185,31 +120,39 @@ export function createRouter(options: CreateRouterOptions): RouterInstance {
     router,
     clearAll,
     RouterProvider,
+
     // 注册全局前置守卫
     beforeEach(guard: GuardWithNextFn) {
       return guardManager.registerGuard('beforeEachGuards', guard);
     },
+
     // 注册全局解析守卫
     beforeResolve(guard: GuardWithNextFn) {
       return guardManager.registerGuard('beforeResolveGuards', guard);
     },
+
     // 注册全局后置钩子
     afterEach(guard) {
       return guardManager.registerGuard('afterEachGuards', guard);
     },
+
     // 注册错误处理函数
     onError(handler: ErrorHandler) {
       return guardManager.registerOnError(handler);
     },
+
     addRoute,
+
     // 检查是否存在指定名称的路由
     hasRoute(name: string) {
       return hasRouteByName(name);
     },
+
     // 解析目标位置，返回 RouteLocation 对象
     resolve(to: string | RouterHookOptions) {
-      return createLocationFrom(router, to, _ROUTE_CONTAINER_.converted);
+      return createLocationFrom(router, to, routeContainer.converted);
     },
+
     // 获取当前路由配置（只读）
     getRoutes: getRouteConfig,
   };
@@ -235,17 +178,45 @@ function convertRoute(route: RouteConfig): ReactRoute {
    * @returns 渲染的 ReactNode
    */
   const handleElement = ({ component, meta }: RouteConfig): ReactNode => {
+    // 情况1：component 已经是 React 元素
+    if (isValidElement(component)) {
+      return component;
+    }
+
+    // 情况2：component 是 React 组件函数
+    // 如 <Component /> 退化为 Component 使用
+    if (isReactComponentType(component)) {
+      return createElement(component);
+    }
+
+    // 情况3：component 是 ComponentLoader 函数
     if (typeof component === 'function') {
       try {
-        // 判断函数调用结果是否为 Promise，若是则视为异步组件
-        if (isPromise(component())) {
-          return createAsyncElement(component as ComponentLoader, meta?.loadingComponent);
+        // 尝试调用函数
+        const result = component();
+
+        // 情况3a：函数返回 Promise（异步组件）
+        if (isPromise(result)) {
+          // 包装为 Suspense
+          return createAsyncElement(component, meta?.loadingComponent);
         }
-      } catch {
-        // 如果函数调用抛出异常（可能因为懒加载函数在调用时才真正加载），忽略并当作同步处理
+
+        // 情况3b：函数返回 React 元素（同步组件函数）
+        if (isValidElement(result)) {
+          return result;
+        }
+
+        // 情况3c：函数返回其他值，当作同步组件处理
+        return result;
+      } catch (error) {
+        // 情况3d：函数调用抛出异常（可能是懒加载组件）
+        // 当作异步组件处理
+        return createAsyncElement(component, meta?.loadingComponent);
       }
     }
-    return component as ReactNode; // 直接返回 ReactNode
+
+    // 情况3：component 是其他类型（null, undefined, string, number 等）
+    return component;
   };
 
   /**
@@ -366,10 +337,14 @@ function matchedLastIndex<T>(arr: T[]): number {
  * @param parentName 父路由名称（可选）
  * @param route 要添加的路由配置
  */
-function appendSourceRoute(parentName: string | undefined, route: RouteConfig) {
+function appendSourceRoute(
+  routeContainer: ReturnType<typeof createRouteContainer>,
+  parentName: string | undefined,
+  route: RouteConfig,
+) {
   if (!parentName) {
     // 无父路由，作为根路由添加
-    _pushUniqueRoute(_ROUTE_CONTAINER_.source, route);
+    pushUniqueRoute(routeContainer.source, route);
     return;
   }
 
@@ -381,7 +356,7 @@ function appendSourceRoute(parentName: string | undefined, route: RouteConfig) {
 
   // 确保父路由有 children 数组
   parent.children ??= [];
-  _pushUniqueRoute(parent.children, route);
+  pushUniqueRoute(parent.children, route);
 }
 
 /**
@@ -390,7 +365,7 @@ function appendSourceRoute(parentName: string | undefined, route: RouteConfig) {
  * @param route 要添加的路由配置
  * @throws 如果路由名称已存在则抛出错误
  */
-function _pushUniqueRoute(list: RouteConfig[], route: RouteConfig) {
+function pushUniqueRoute(list: RouteConfig[], route: RouteConfig) {
   if (route.name && list.some((item) => item.name === route.name)) {
     throw new Error(`[Router] Route with name "${route.name}" already exists.`);
   }

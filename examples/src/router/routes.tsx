@@ -1,7 +1,11 @@
 import { type RouteConfig, RouterView } from '@vureact/router';
 import App from '../App';
 import AppNotFound from '../pages/AppNotFound';
-import BasicRoutingDemo, { BasicNestedAlpha, BasicNestedBeta, BasicNestedLayout } from '../pages/BasicRoutingDemo';
+import BasicRoutingDemo, {
+  BasicNestedAlpha,
+  BasicNestedBeta,
+  BasicNestedLayout,
+} from '../pages/BasicRoutingDemo';
 import ComponentGuardsDemo, {
   ComponentEnterGuard,
   ComponentFormGuard,
@@ -12,6 +16,10 @@ import GlobalGuardsDemo, { GlobalGuardTarget } from '../pages/GlobalGuardsDemo';
 import HomePage from '../pages/HomePage';
 import RouterLinkDemo from '../pages/RouterLinkDemo';
 import UseRouterRouteDemo from '../pages/UseRouterRouteDemo';
+import DocBasicRoutingExample, {
+  DocBasicAlpha,
+  DocBasicBeta,
+} from '../pages/doc-examples/DocBasicRoutingExample';
 import DocComponentGuardsExample, {
   DocGuardEnter,
   DocGuardForm,
@@ -31,20 +39,16 @@ import DocIntroductionExample from '../pages/doc-examples/DocIntroductionExample
 import DocQuickStartExample from '../pages/doc-examples/DocQuickStartExample';
 import DocRouterLinkExample from '../pages/doc-examples/DocRouterLinkExample';
 import DocUseRouterUseRouteExample from '../pages/doc-examples/DocUseRouterUseRouteExample';
-import DocBasicRoutingExample, {
-  DocBasicAlpha,
-  DocBasicBeta,
-} from '../pages/doc-examples/DocBasicRoutingExample';
 
 const routes: RouteConfig[] = [
   {
     path: '/',
     name: 'layout',
-    component: <App />,
+    component: App,
     children: [
       { path: '', redirect: '/home' },
-      { path: 'home', name: 'home', component: <HomePage /> },
-      { path: 'router-link', name: 'router-link-demo', component: <RouterLinkDemo /> },
+      { path: 'home', name: 'home', component: HomePage },
+      { path: 'router-link', name: 'router-link-demo', component: RouterLinkDemo },
       {
         path: 'use-router-route',
         name: 'use-router-route',
@@ -96,12 +100,16 @@ const routes: RouteConfig[] = [
           {
             path: 'error',
             name: 'global-error',
-            component: <GlobalGuardTarget title="错误触发页" tip="可演示 onError + failure:error。" />,
+            component: (
+              <GlobalGuardTarget title="错误触发页" tip="可演示 onError + failure:error。" />
+            ),
           },
           {
             path: 'login',
             name: 'global-login',
-            component: <GlobalGuardTarget title="登录页" tip="受保护路由未授权时将重定向到这里。" />,
+            component: (
+              <GlobalGuardTarget title="登录页" tip="受保护路由未授权时将重定向到这里。" />
+            ),
           },
         ],
       },
@@ -133,8 +141,16 @@ const routes: RouteConfig[] = [
         children: [],
       },
       { path: 'doc-examples', name: 'doc-examples-home', component: <DocExamplesHome /> },
-      { path: 'doc-examples/introduction', name: 'doc-introduction', component: <DocIntroductionExample /> },
-      { path: 'doc-examples/quick-start', name: 'doc-quick-start', component: <DocQuickStartExample /> },
+      {
+        path: 'doc-examples/introduction',
+        name: 'doc-introduction',
+        component: <DocIntroductionExample />,
+      },
+      {
+        path: 'doc-examples/quick-start',
+        name: 'doc-quick-start',
+        component: <DocQuickStartExample />,
+      },
       {
         path: 'doc-examples/basic-routing',
         name: 'doc-basic-routing',
@@ -145,7 +161,11 @@ const routes: RouteConfig[] = [
           { path: '*', name: 'doc-basic-fallback', component: <div>doc basic fallback</div> },
         ],
       },
-      { path: 'doc-examples/router-link', name: 'doc-router-link', component: <DocRouterLinkExample /> },
+      {
+        path: 'doc-examples/router-link',
+        name: 'doc-router-link',
+        component: <DocRouterLinkExample />,
+      },
       {
         path: 'doc-examples/use-router-use-route',
         name: 'doc-use-router-use-route',

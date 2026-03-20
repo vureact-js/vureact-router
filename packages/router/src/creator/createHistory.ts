@@ -4,7 +4,7 @@ import {
   createHashRouter,
   createMemoryRouter,
 } from 'react-router-dom';
-import { type ReactRoute } from './createRouter';
+import { type ReactRoute } from './createRouter/types';
 
 export type RouterMode = 'hash' | 'history' | 'memoryHistory';
 

@@ -1,3 +1,4 @@
+import { FunctionComponent, isValidElement } from 'react';
 import { matchPath, type Params, type Path } from 'react-router-dom';
 import { _ROUTE_CONFIG_, type GlobalRouteConfig } from './creator/createClobalRouteConfig';
 import type { RouteConfig } from './creator/createRouter';
@@ -40,7 +41,7 @@ export const buildFullPath = (to: string | RouterHookOptions, currentPath = '/')
 export function buildResolvedTo(to: string | RouterHookOptions, currentPath = '/'): ResolvedTo {
   if (typeof to === 'string') {
     const [pathPart, hashPart = ''] = to.split('#');
-    const [pathname, searchPart = ''] = pathPart.split('?');
+    const [pathname, searchPart = ''] = pathPart!.split('?');
     return {
       pathname: pathname || currentPath,
       search: searchPart ? `?${searchPart}` : '',
@@ -53,13 +54,20 @@ export function buildResolvedTo(to: string | RouterHookOptions, currentPath = '/
   return {
     pathname: resolvedPath(normalized),
     search: buildSearchParams(normalized.query) ?? '',
-    hash: normalized.hash ? (normalized.hash.startsWith('#') ? normalized.hash : `#${normalized.hash}`) : '',
+    hash: normalized.hash
+      ? normalized.hash.startsWith('#')
+        ? normalized.hash
+        : `#${normalized.hash}`
+      : '',
     state: normalized.state,
     replace: normalized.replace,
   };
 }
 
-export function normalizeRouterOptions(to: RouterHookOptions, currentPath = '/'): RouterHookOptions {
+export function normalizeRouterOptions(
+  to: RouterHookOptions,
+  currentPath = '/',
+): RouterHookOptions {
   const normalized: RouterHookOptions = {
     ...to,
   };
@@ -113,7 +121,10 @@ export function buildSearchParams(query?: Record<string, any>): string | undefin
   return encoded ? `?${encoded}` : undefined;
 }
 
-export function findRouteByName(name: string, routes: RouteConfig[] = _ROUTE_CONFIG_.source): RouteConfig | null {
+export function findRouteByName(
+  name: string,
+  routes: RouteConfig[] = _ROUTE_CONFIG_.source,
+): RouteConfig | null {
   for (const route of routes) {
     if (route.name === name) {
       return route;
@@ -229,4 +240,61 @@ export function isPromise(obj: any): obj is Promise<any> {
     (typeof obj === 'object' || typeof obj === 'function') &&
     typeof obj.then === 'function'
   );
+}
+
+/**
+ * 判断是否为 React 组件函数
+ */
+export function isReactComponentType(component: any): component is FunctionComponent {
+  if (typeof component !== 'function') {
+    return false;
+  }
+
+  // 排除已经是 React 元素的情况
+  if (isValidElement(component)) {
+    return false;
+  }
+
+  // 优先识别 React 内部标记（forwardRef/memo/lazy 等）
+  const $$typeof = component && (component.$$typeof as symbol | undefined);
+
+  if ($$typeof) {
+    const reactSymbols = [
+      Symbol.for('react.forward_ref'),
+      Symbol.for('react.memo'),
+      Symbol.for('react.lazy'),
+      Symbol.for('react.profiler'),
+      Symbol.for('react.strict_mode'),
+      Symbol.for('react.suspense'),
+      Symbol.for('react.fragment'),
+      Symbol.for('react.provider'),
+      Symbol.for('react.consumer'),
+      Symbol.for('react.context'),
+    ];
+
+    if (reactSymbols.includes($$typeof)) return true;
+  }
+
+  // class 组件检测（有 prototype.render 或 isReactComponent）
+  if (component.prototype && (component.prototype.isReactComponent || component.prototype.render)) {
+    return true;
+  }
+
+  // 函数组件通常采用 PascalCase 命名，使用首字母大写作为辅助判断
+  const name = component.displayName || component.name || '';
+  if (typeof name === 'string' && /^[A-Z]/.test(name)) {
+    return true;
+  }
+
+  // 简单启发式：如果函数源码包含动态 import，通常是 loader（返回 Promise），因此不视为组件
+  try {
+    const src = Function.prototype.toString.call(component);
+    if (/import\s*\(/.test(src)) {
+      return false;
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return false;
 }
