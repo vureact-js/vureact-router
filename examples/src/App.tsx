@@ -9,7 +9,10 @@ function App() {
     { key: '/router-link', summary: 'RouterLink 多种跳转写法与 customRender' },
     { key: '/use-router-route', summary: 'useRouter / useRoute 交互式展示' },
     { key: '/global-guards', summary: 'beforeEach / beforeResolve / afterEach / onError' },
-    { key: '/component-guards', summary: 'beforeRouteLeave / beforeRouteUpdate / beforeRouteEnter' },
+    {
+      key: '/component-guards',
+      summary: 'beforeRouteLeave / beforeRouteUpdate / beforeRouteEnter',
+    },
     { key: '/dynamic-routes', summary: 'addRoute / hasRoute / resolve 运行时路由能力' },
   ];
 

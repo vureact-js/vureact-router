@@ -1,4 +1,5 @@
 import { RouterLink, RouterView, useRoute } from '@vureact/router';
+import { memo } from 'react';
 
 function BasicRoutingDemo() {
   const route = useRoute();
@@ -49,4 +50,4 @@ export function BasicNestedBeta() {
   return <div>beta 页面: 与 alpha 同级，通过父级 `RouterView` 注入。</div>;
 }
 
-export default BasicRoutingDemo;
+export default memo(BasicRoutingDemo);

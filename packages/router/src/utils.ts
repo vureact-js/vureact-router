@@ -246,16 +246,13 @@ export function isPromise(obj: any): obj is Promise<any> {
  * 判断是否为 React 组件函数
  */
 export function isReactComponentType(component: any): component is FunctionComponent {
-  if (typeof component !== 'function') {
-    return false;
-  }
-
   // 排除已经是 React 元素的情况
   if (isValidElement(component)) {
     return false;
   }
 
   // 优先识别 React 内部标记（forwardRef/memo/lazy 等）
+  // fix: 修复无法识别 memo / forwardRef / lazy 等对象形式的组件
   const $$typeof = component && (component.$$typeof as symbol | undefined);
 
   if ($$typeof) {
@@ -275,25 +272,31 @@ export function isReactComponentType(component: any): component is FunctionCompo
     if (reactSymbols.includes($$typeof)) return true;
   }
 
-  // class 组件检测（有 prototype.render 或 isReactComponent）
-  if (component.prototype && (component.prototype.isReactComponent || component.prototype.render)) {
-    return true;
-  }
-
-  // 函数组件通常采用 PascalCase 命名，使用首字母大写作为辅助判断
-  const name = component.displayName || component.name || '';
-  if (typeof name === 'string' && /^[A-Z]/.test(name)) {
-    return true;
-  }
-
-  // 简单启发式：如果函数源码包含动态 import，通常是 loader（返回 Promise），因此不视为组件
-  try {
-    const src = Function.prototype.toString.call(component);
-    if (/import\s*\(/.test(src)) {
-      return false;
+  // 函数或类组件检测
+  if (typeof component === 'function') {
+    // class 组件检测（有 prototype.render 或 isReactComponent）
+    if (
+      component.prototype &&
+      (component.prototype.isReactComponent || component.prototype.render)
+    ) {
+      return true;
     }
-  } catch (e) {
-    // ignore
+
+    // 函数组件通常采用 PascalCase 命名，使用首字母大写作为辅助判断
+    const name = component.displayName || component.name || '';
+    if (typeof name === 'string' && /^[A-Z]/.test(name)) {
+      return true;
+    }
+
+    // 简单启发式：如果函数源码包含动态 import，通常是 loader（返回 Promise），因此不视为组件
+    try {
+      const src = Function.prototype.toString.call(component);
+      if (/import\s*\(/.test(src)) {
+        return false;
+      }
+    } catch (e) {
+      // ignore
+    }
   }
 
   return false;

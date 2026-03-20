@@ -1,4 +1,5 @@
 import { RouterLink, useRouter } from '@vureact/router';
+import { memo } from 'react';
 
 function RouterLinkDemo() {
   const router = useRouter();
@@ -13,7 +14,9 @@ function RouterLinkDemo() {
         <h3>普通跳转</h3>
         <div className="demo-links">
           <RouterLink to="/home">字符串 to</RouterLink>
-          <RouterLink to={{ path: '/use-router-route', query: { tab: 'intro' }, hash: 'router-link' }}>
+          <RouterLink
+            to={{ path: '/use-router-route', query: { tab: 'intro' }, hash: 'router-link' }}
+          >
             对象 path + query + hash
           </RouterLink>
           <RouterLink to={{ name: 'use-router-route-detail', params: { id: '8' } }}>
@@ -47,4 +50,4 @@ function RouterLinkDemo() {
   );
 }
 
-export default RouterLinkDemo;
+export default memo(RouterLinkDemo);
