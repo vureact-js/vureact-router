@@ -1,72 +1,80 @@
-# Vureact Router
+<div align="center"><a name="readme-top"></a>
 
-English | [简体中文](./README.zh.md)
+<img height="180" src="./logo.png" />
 
-A Vue Router 4.x style routing library for React 18+, built on top of React Router DOM 7.9+. Provides familiar Vue Router APIs for developers transitioning from Vue.js to React.
+# VuReact Router
+
+基于 React Router DOM 7.9+ 构建的 Vue Router 4.x 风格 React 18+ 路由库。为从 Vue.js 转向 React 的开发者提供熟悉的 Vue Router API。
 
 [![npm version](https://img.shields.io/npm/v/@vureact/router.svg?style=flat-square)](https://vureact.top/)
 [![npm downloads](https://img.shields.io/npm/dm/@vureact/router.svg?style=flat-square)](https://www.npmjs.com/package/@vureact/router)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React 18+](https://img.shields.io/badge/React-18%2B-61dafb)](https://reactjs.org/)
 
-## 🏗️ Project Structure
+简体中文 | [English](./README.en.md)
 
-This is a monorepo project using pnpm workspaces. The project structure is as follows:
+</div>
+
+---
+
+## 🏗️ 项目结构
+
+这是一个使用 pnpm workspaces 的 monorepo 项目。项目结构如下：
 
 ```txt
 vureact-router/
-├── packages/
-│   └── router/          # @vureact/router package
-│       ├── src/         # Source code
-│       ├── dist/        # Built artifacts
-│       ├── package.json # Package configuration
-│       └── README.md    # Package documentation
-├── examples/            # Example applications
-│   ├── src/            # Example source code
-│   ├── package.json    # Example dependencies
-│   └── README.md       # Example documentation
-├── package.json        # Root package configuration
-├── pnpm-workspace.yaml # Workspace configuration
-└── README.md          # This file
+├── packages/           # 包目录
+│   └── router/        # @vureact/router 包
+│       ├── src/       # 源代码
+│       ├── dist/      # 构建产物
+│       ├── package.json # 包配置
+│       └── README.md  # 包文档
+├── examples/          # 示例应用
+│   ├── src/          # 示例源代码
+│   ├── package.json  # 示例依赖
+│   └── README.md     # 示例文档
+├── package.json      # 根包配置
+├── pnpm-workspace.yaml # 工作区配置
+└── README.md         # 本文件
 ```
 
-## 📦 Packages
+## 📦 包
 
 ### @vureact/router
 
-The main routing library package. This is the package you'll install in your React applications.
+主要的路由库包。这是您将在 React 应用中安装的包。
 
-**Key Features:**
+**主要特性：**
 
-- Vue Router 4.x compatible API
-- Full TypeScript support
-- Navigation guards (beforeEach, beforeResolve, afterEach)
-- Async component loading with code splitting
-- Dynamic route addition
-- Nested routes support
-- Route meta fields
-- Active link class management
-- Multiple history modes (hash, browser, memory)
+- Vue Router 4.x 兼容的 API
+- 完整的 TypeScript 支持
+- 导航守卫（beforeEach、beforeResolve、afterEach）
+- 异步组件加载和代码分割
+- 动态路由添加
+- 嵌套路由支持
+- 路由元信息字段
+- 活动链接类管理
+- 多种历史模式（hash、browser、memory）
 
-**Installation:**
+**安装：**
 
 ```bash
 npm install @vureact/router react-router-dom react react-dom
-# or
+# 或
 yarn add @vureact/router react-router-dom react react-dom
-# or
+# 或
 pnpm add @vureact/router react-router-dom react react-dom
 ```
 
-**Quick Start:**
+**快速开始：**
 
 ```tsx
 import { createRouter, RouterView, RouterLink } from '@vureact/router';
 
 const router = createRouter({
   routes: [
-    { path: '/', component: <div>Home</div> },
-    { path: '/about', component: <div>About</div> },
+    { path: '/', component: <div>首页</div> },
+    { path: '/about', component: <div>关于</div> },
   ],
   history: 'hash',
 });
@@ -75,8 +83,8 @@ function App() {
   return (
     <router.RouterProvider>
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/">首页</RouterLink>
+        <RouterLink to="/about">关于</RouterLink>
       </nav>
       <RouterView />
     </router.RouterProvider>
@@ -84,53 +92,53 @@ function App() {
 }
 ```
 
-For detailed documentation, see [packages/router/README.md](./packages/router/README.md).
+详细文档请参阅 [packages/router/README.zh.md](./packages/router/README.zh.md)。
 
-## 🚀 Getting Started
+## 🚀 开始使用
 
-### Prerequisites
+### 先决条件
 
 - Node.js >= 16.0.0
-- pnpm >= 8.0.0 (recommended) or npm/yarn
+- pnpm >= 8.0.0（推荐）或 npm/yarn
 
-### Development Setup
+### 开发环境设置
 
-1. **Clone the repository:**
+1. **克隆仓库：**
 
    ```bash
    git clone https://github.com/vureact-js/vureact-router.git
    cd vureact-router
    ```
 
-2. **Install dependencies:**
+2. **安装依赖：**
 
    ```bash
    pnpm install
    ```
 
-3. **Build the router package:**
+3. **构建路由包：**
 
    ```bash
    pnpm build:router
    ```
 
-4. **Run tests:**
+4. **运行测试：**
 
    ```bash
    pnpm test:router
    ```
 
-### Development Workflow
+### 开发工作流
 
-- **Build:** `pnpm build:router`
-- **Test:** `pnpm test:router`
-- **Run examples:** Navigate to `examples/` and run `pnpm dev`
+- **构建：** `pnpm build:router`
+- **测试：** `pnpm test:router`
+- **运行示例：** 进入 `examples/` 目录并运行 `pnpm dev`
 
-## 📖 Examples
+## 📖 示例
 
-The `examples/` directory contains example applications demonstrating various features of @vureact/router.
+`examples/` 目录包含展示 @vureact/router 各种功能的示例应用。
 
-To run the examples:
+运行示例：
 
 ```bash
 cd examples
@@ -138,105 +146,102 @@ pnpm install
 pnpm dev
 ```
 
-Then open your browser to `http://localhost:5173` (or the port shown in the terminal).
+然后在浏览器中打开 `http://localhost:5173`（或终端显示的端口）。
 
-Example features demonstrated:
+示例展示的功能：
 
-- Basic routing setup
-- Nested routes
-- Route guards
-- Async components
-- Dynamic route addition
-- Active link styling
-- Programmatic navigation
+- 基础路由设置
+- 嵌套路由
+- 路由守卫
+- 异步组件
+- 动态路由添加
+- 活动链接样式
+- 编程式导航
 
-## 🛠️ Development
+## 🛠️ 开发
 
-### Technology Stack
+### 技术栈
 
-- **React 18+** - UI library
-- **React Router DOM 7.9+** - Underlying routing library
-- **TypeScript** - Type safety
-- **Rollup** - Bundling
-- **Jest** - Testing
-- **ESLint & Prettier** - Code quality
+- **React 18+** - UI 库
+- **React Router DOM 7.9+** - 底层路由库
+- **TypeScript** - 类型安全
+- **Rollup** - 打包工具
+- **Jest** - 测试框架
+- **ESLint & Prettier** - 代码质量工具
 
-### Contributing
+### 贡献指南
 
-We welcome contributions! Please see our [Contributing Guidelines](./CONTRIBUTING.md) for details.
+我们欢迎贡献！详情请参阅 [贡献指南](./CONTRIBUTING.zh.md)。
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for your changes
-5. Ensure all tests pass
-6. Submit a pull request
+1. Fork 本仓库
+2. 创建功能分支
+3. 进行更改
+4. 为更改添加测试
+5. 确保所有测试通过
+6. 提交 Pull Request
 
-## 📚 Documentation
+## 📚 文档
 
-### Package Documentation
+### 包文档
 
-- [@vureact/router Documentation](https://router.vureact.top/en)
-- [@vureact/router README](./packages/router/README.md)
+- [@vureact/router 官网](https://router.vureact.top)
+- [@vureact/router README](./packages/router/README.zh.md)
 
-### Additional Resources
+### 其他资源
 
-- [TypeScript Configuration](./tsconfig.base.json)
-- [ESLint Configuration](./eslint.config.js)
-- [Prettier Configuration](./.prettierrc.json)
+- [TypeScript 配置](./tsconfig.base.json)
+- [ESLint 配置](./eslint.config.js)
+- [Prettier 配置](./.prettierrc.json)
 
-## 🤝 Migration from Vue Router
+## 🤝 从 Vue Router 迁移
 
-If you're coming from Vue.js and Vue Router, @vureact/router provides a familiar API:
+如果您来自 Vue.js 和 Vue Router，@vureact/router 提供了熟悉的 API：
 
-| Vue Router        | @vureact/router   | Notes               |
-| ----------------- | ----------------- | ------------------- |
-| `createRouter()`  | `createRouter()`  | Same API            |
-| `<router-view>`   | `<RouterView>`    | PascalCase in React |
-| `<router-link>`   | `<RouterLink>`    | PascalCase in React |
-| `useRouter()`     | `useRouter()`     | Same API            |
-| `useRoute()`      | `useRoute()`      | Same API            |
-| Navigation Guards | Navigation Guards | Same guard types    |
-| Route Meta        | Route Meta        | Same functionality  |
-| Nested Routes     | Nested Routes     | Same configuration  |
+| Vue Router       | @vureact/router  | 说明                    |
+| ---------------- | ---------------- | ----------------------- |
+| `createRouter()` | `createRouter()` | 相同的 API              |
+| `<router-view>`  | `<RouterView>`   | React 中使用 PascalCase |
+| `<router-link>`  | `<RouterLink>`   | React 中使用 PascalCase |
+| `useRouter()`    | `useRouter()`    | 相同的 API              |
+| `useRoute()`     | `useRoute()`     | 相同的 API              |
+| 导航守卫         | 导航守卫         | 相同的守卫类型          |
+| 路由元信息       | 路由元信息       | 相同的功能              |
+| 嵌套路由         | 嵌套路由         | 相同的配置方式          |
 
-## 🐛 Troubleshooting
+## 🐛 故障排除
 
-### Common Issues
+### 常见问题
 
-1. **Build errors**
-   - Ensure you have the correct Node.js version (>=16)
-   - Clear node_modules and reinstall: `pnpm clean && pnpm install`
+1. **构建错误**
+   - 确保使用正确的 Node.js 版本（>=16）
+   - 清除 node_modules 并重新安装：`pnpm clean && pnpm install`
 
-2. **TypeScript errors**
-   - Check your TypeScript version (>=5.9.3)
-   - Ensure proper module resolution in tsconfig.json
+2. **TypeScript 错误**
+   - 检查 TypeScript 版本（>=5.9.3）
+   - 确保 tsconfig.json 中的模块解析正确
 
-3. **Router not working**
-   - Make sure you're wrapping your app with `<router.RouterProvider>`
-   - Check that routes are correctly configured
+3. **路由不工作**
+   - 确保使用 `<router.RouterProvider>` 包裹应用
+   - 检查路由配置是否正确
 
-### Getting Help
+### 获取帮助
 
-- [GitHub Issues](https://github.com/vureact-js/vureact-router/issues) - Report bugs or request features
-- [GitHub Discussions](https://github.com/vureact-js/vureact-router/discussions) - Ask questions and share ideas
+- [GitHub Issues](https://github.com/vureact-js/vureact-router/issues) - 报告错误或请求功能
+- [GitHub Discussions](https://github.com/vureact-js/vureact-router/discussions) - 提问和分享想法
 
-## 📄 License
+## 📄 许可证
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+本项目基于 MIT 许可证 - 详情请参阅 [LICENSE](./LICENSE) 文件。
 
-## 🔗 Links
+## 🔗 链接
 
-- [Documentation](https://router.vureact.top/en)
-- [Issue Tracker](https://github.com/vureact-js/vureact-router/issues)
-- [Changelog](./CHANGELOG.md)
+- [文档](https://router.vureact.top)
+- [问题跟踪](https://github.com/vureact-js/vureact-router/issues)
+- [更新日志](./packages/router/CHANGELOG.md)
+- [VuReact](https://vureact.top)
 
-## 🙏 Acknowledgments
+## 🙏 致谢
 
-- [React Router](https://reactrouter.com/) - For providing the excellent underlying routing library
-- [Vue Router](https://router.vuejs.org/) - For the API inspiration
-- All contributors and users of this project
-
----
-
-**Built with ❤️ by the Vureact team**"
+- [React Router](https://reactrouter.com/) - 提供优秀的底层路由库
+- [Vue Router](https://router.vuejs.org/) - API 灵感来源
+- 本项目的所有贡献者和用户

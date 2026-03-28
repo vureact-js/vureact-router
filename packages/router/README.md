@@ -1,84 +1,84 @@
 # @vureact/router
 
-English | [简体中文](./README.zh.md)
+简体中文 | [English](./README.en.md)
 
-Vue Router 4.x Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)
+Vue Router 4.x 风格的 React 18+ 路由适配器（基于 React Router DOM 7.9+ 封装）
 
-## ✨ Features
+## ✨ 特性
 
-- **Vue Router API Compatibility**: Familiar API for Vue.js developers transitioning to React
-- **Built on React Router DOM**: Leverages the stability and features of React Router DOM 7.9+
-- **TypeScript First**: Full TypeScript support with comprehensive type definitions
-- **Route Guards**: Support for `beforeEach`, `beforeResolve`, `afterEach` navigation guards
-- **Async Components**: Built-in support for code splitting with lazy loading
-- **Dynamic Routing**: Programmatic route addition and manipulation
-- **Nested Routes**: Full support for nested route configurations
-- **Route Meta Fields**: Attach metadata to routes for custom logic
-- **Active Link Classes**: Automatic CSS class management for active links
-- **Multiple History Modes**: Support for hash, browser, and memory history
+- **Vue Router API 兼容性**: 为从 Vue.js 转向 React 的开发者提供熟悉的 API
+- **基于 React Router DOM**: 基于稳定且功能丰富的 React Router DOM 7.9+ 构建
+- **TypeScript 优先**: 完整的 TypeScript 支持，提供全面的类型定义
+- **路由守卫**: 支持 `beforeEach`、`beforeResolve`、`afterEach` 导航守卫
+- **异步组件**: 内置代码分割和懒加载支持
+- **动态路由**: 支持编程式路由添加和操作
+- **嵌套路由**: 完整的嵌套路由配置支持
+- **路由元信息**: 为路由附加元数据以支持自定义逻辑
+- **活动链接类**: 自动管理活动链接的 CSS 类
+- **多种历史模式**: 支持 hash、browser 和 memory 历史模式
 
-## 📦 Installation
+## 📦 安装
 
 ```bash
 npm install @vureact/router
-# or
+# 或
 yarn add @vureact/router
-# or
+# 或
 pnpm add @vureact/router
 ```
 
-### Peer Dependencies
+### 对等依赖
 
 - React >= 18.2.0
 - React DOM >= 18.2.0
 - React Router DOM >= 7.9.0
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-### Basic Setup
+### 基础设置
 
 ```tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createRouter, RouterView, RouterLink } from '@vureact/router';
 
-// Define your routes
+// 定义路由
 const routes = [
   {
     path: '/',
-    component: <div>Home Page</div>,
+    component: <div>首页</div>,
   },
   {
     path: '/about',
-    component: <div>About Page</div>,
+    component: <div>关于页面</div>,
   },
   {
     path: '/users/:id',
-    component: <div>User Profile</div>,
+    component: <div>用户资料</div>,
   },
 ];
 
-// Create router instance
+// 创建路由实例
 const router = createRouter({
   routes,
-  history: 'hash', // or 'browser', 'memory'
+  history: 'hash', // 或 'browser'、'memory'
 });
 
-// App component
+// 应用组件
 function App() {
   return (
     <div>
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/users/123">User 123</RouterLink>
+        <RouterLink to="/">首页</RouterLink>
+        <RouterLink to="/about">关于</RouterLink>
+        <RouterLink to="/users/123">用户 123</RouterLink>
       </nav>
       <RouterView />
     </div>
   );
 }
 
-// Render your app
+// 渲染应用
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <router.RouterProvider>
@@ -87,13 +87,13 @@ root.render(
 );
 ```
 
-## 📖 API Reference
+## 📖 API 参考
 
-### Core Functions
+### 核心函数
 
 #### `createRouter(options: CreateRouterOptions): RouterInstance`
 
-Creates a router instance with the given configuration.
+使用给定配置创建路由实例。
 
 ```tsx
 const router = createRouter({
@@ -104,32 +104,32 @@ const router = createRouter({
 });
 ```
 
-#### `RouterInstance` Methods
+#### `RouterInstance` 方法
 
-- `router.beforeEach(guard: GuardWithNextFn)`: Register global before navigation guard
-- `router.beforeResolve(guard: GuardWithNextFn)`: Register global before resolve guard
-- `router.afterEach(guard: AfterEachGuard)`: Register global after navigation guard
-- `router.onError(handler: ErrorHandler)`: Register global error handler
-- `router.addRoute(route: RouteConfig)`: Add a new route
-- `router.addRoute(parentName: string, route: RouteConfig)`: Add a nested route
-- `router.hasRoute(name: string)`: Check if a route exists by name
-- `router.resolve(to: string | RouterOptions)`: Resolve a route location
-- `router.getRoutes()`: Get all registered routes
-- `router.clearAll()`: Clear all routes and guards
+- `router.beforeEach(guard: GuardWithNextFn)`: 注册全局前置导航守卫
+- `router.beforeResolve(guard: GuardWithNextFn)`: 注册全局解析守卫
+- `router.afterEach(guard: AfterEachGuard)`: 注册全局后置导航守卫
+- `router.onError(handler: ErrorHandler)`: 注册全局错误处理器
+- `router.addRoute(route: RouteConfig)`: 添加新路由
+- `router.addRoute(parentName: string, route: RouteConfig)`: 添加嵌套路由
+- `router.hasRoute(name: string)`: 检查路由是否存在（通过名称）
+- `router.resolve(to: string | RouterOptions)`: 解析路由位置
+- `router.getRoutes()`: 获取所有已注册路由
+- `router.clearAll()`: 清除所有路由和守卫
 
-### Components
+### 组件
 
 #### `RouterView`
 
-The component that renders the matched route component.
+渲染匹配的路由组件。
 
 ```tsx
-<RouterView customRender={(component, route) => <div> {component}</div>} />
+<RouterView customRender={(component, route) => <div>{component}</div>} />
 ```
 
 #### `RouterLink`
 
-A component for navigating between routes.
+用于在路由之间导航的组件。
 
 ```tsx
 <RouterLink
@@ -138,19 +138,19 @@ A component for navigating between routes.
   exactActiveClassName="exact-active-link"
   custom={({ href, isActive, navigate }) => (
     <button onClick={navigate} className={isActive ? 'active' : ''}>
-      Go to About
+      前往关于页面
     </button>
   )}
 >
-  About
+  关于
 </RouterLink>
 ```
 
-### Hooks
+### 钩子
 
 #### `useRouter()`
 
-Hook to access the router instance for programmatic navigation.
+用于编程式导航的钩子，访问路由实例。
 
 ```tsx
 import { useRouter } from '@vureact/router';
@@ -160,17 +160,17 @@ function MyComponent() {
 
   const handleClick = () => {
     router.push('/about');
-    // or
+    // 或
     router.push({ path: '/about', query: { tab: 'info' } });
   };
 
-  return <button onClick={handleClick}>Go to About</button>;
+  return <button onClick={handleClick}>前往关于页面</button>;
 }
 ```
 
 #### `useRoute()`
 
-Hook to access the current route information.
+访问当前路由信息的钩子。
 
 ```tsx
 import { useRoute } from '@vureact/router';
@@ -180,22 +180,22 @@ function MyComponent() {
 
   return (
     <div>
-      <p>Current path: {route.path}</p>
-      <p>Query params: {JSON.stringify(route.query)}</p>
-      <p>Route params: {JSON.stringify(route.params)}</p>
-      <p>Route meta: {JSON.stringify(route.meta)}</p>
+      <p>当前路径: {route.path}</p>
+      <p>查询参数: {JSON.stringify(route.query)}</p>
+      <p>路由参数: {JSON.stringify(route.params)}</p>
+      <p>路由元信息: {JSON.stringify(route.meta)}</p>
     </div>
   );
 }
 ```
 
-#### Route Guards Hooks
+#### 路由守卫钩子
 
-- `useBeforeRouteEnter(guard: ComponentGuard)`: Component-level before enter guard
-- `useBeforeRouteLeave(guard: ComponentGuard)`: Component-level before leave guard
-- `useBeforeRouteUpdate(guard: ComponentGuard)`: Component-level before update guard
+- `useBeforeRouteEnter(guard: ComponentGuard)`: 组件级进入前守卫
+- `useBeforeRouteLeave(guard: ComponentGuard)`: 组件级离开前守卫
+- `useBeforeRouteUpdate(guard: ComponentGuard)`: 组件级更新前守卫
 
-### Route Configuration
+### 路由配置
 
 ```tsx
 const routes = [
@@ -209,7 +209,7 @@ const routes = [
         path: 'dashboard',
         name: 'dashboard',
         component: <Dashboard />,
-        meta: { title: 'Dashboard' },
+        meta: { title: '仪表板' },
       },
     ],
   },
@@ -222,7 +222,7 @@ const routes = [
     path: '/users/:id',
     component: <UserProfile />,
     beforeEnter: (to, from) => {
-      // Component-specific guard
+      // 组件特定守卫
       if (!isAuthenticated()) {
         return '/login';
       }
@@ -232,7 +232,7 @@ const routes = [
     path: '/async',
     component: () => import('./AsyncComponent'),
     meta: {
-      loadingComponent: <div>Loading...</div>,
+      loadingComponent: <div>加载中...</div>,
     },
   },
   {
@@ -246,14 +246,14 @@ const routes = [
 ];
 ```
 
-## 🔒 Route Guards
+## 🔒 路由守卫
 
-### Global Guards
+### 全局守卫
 
 ```tsx
 const router = createRouter({ routes });
 
-// Before each navigation
+// 每次导航前
 router.beforeEach((to, from) => {
   if (to.meta.requiresAuth && !isAuthenticated()) {
     return '/login';
@@ -263,45 +263,45 @@ router.beforeEach((to, from) => {
     return '/';
   }
 
-  return true; // Continue navigation
+  return true; // 继续导航
 });
 
-// After each navigation
+// 每次导航后
 router.afterEach((to, from) => {
-  // Analytics tracking
+  // 分析跟踪
   trackPageView(to.fullPath);
 });
 
-// Error handling
+// 错误处理
 router.onError((error) => {
-  console.error('Navigation error:', error);
+  console.error('导航错误:', error);
 });
 ```
 
-### Component Guards
+### 组件守卫
 
 ```tsx
 import { useBeforeRouteEnter, useBeforeRouteLeave } from '@vureact/router';
 
 function UserProfile() {
   useBeforeRouteEnter((to, from) => {
-    // Called before the component is mounted
+    // 在组件挂载前调用
     return fetchUserData(to.params.id);
   });
 
   useBeforeRouteLeave((to, from) => {
-    // Called before leaving the component
+    // 在离开组件前调用
     if (hasUnsavedChanges()) {
-      return confirm('You have unsaved changes. Leave anyway?');
+      return confirm('您有未保存的更改。确定要离开吗？');
     }
     return true;
   });
 
-  return <div>User Profile</div>;
+  return <div>用户资料</div>;
 }
 ```
 
-## 🔄 Async Components & Code Splitting
+## 🔄 异步组件与代码分割
 
 ```tsx
 const routes = [
@@ -309,7 +309,7 @@ const routes = [
     path: '/dashboard',
     component: () => import('./Dashboard'),
     meta: {
-      loadingComponent: <div className="loading-spinner">Loading dashboard...</div>,
+      loadingComponent: <div className="loading-spinner">加载仪表板中...</div>,
     },
   },
   {
@@ -319,19 +319,19 @@ const routes = [
 ];
 ```
 
-## 🎨 Active Link Styling
+## 🎨 活动链接样式
 
 ```css
-/* Default classes */
+/* 默认类 */
 .router-link-active {
-  /* Applied when the link's route is active */
+  /* 当链接的路由处于活动状态时应用 */
 }
 
 .router-link-exact-active {
-  /* Applied when the link's route is exactly active */
+  /* 当链接的路由完全匹配时应用 */
 }
 
-/* Custom classes */
+/* 自定义类 */
 .active-link {
   color: blue;
   font-weight: bold;
@@ -345,18 +345,18 @@ const routes = [
 
 ```tsx
 <RouterLink to="/about" activeClassName="active-link" exactActiveClassName="exact-active-link">
-  About
+  关于
 </RouterLink>
 ```
 
-## 📝 TypeScript Support
+## 📝 TypeScript 支持
 
-Full TypeScript support with comprehensive type definitions:
+完整的 TypeScript 支持，提供全面的类型定义：
 
 ```tsx
 import type { RouteConfig, RouterInstance, RouteLocation, RouterOptions } from '@vureact/router';
 
-// Type-safe route configuration
+// 类型安全的路由配置
 const routes: RouteConfig[] = [
   {
     path: '/users/:id',
@@ -369,55 +369,55 @@ const routes: RouteConfig[] = [
   },
 ];
 
-// Type-safe navigation
+// 类型安全的导航
 const router = useRouter();
 router.push({ name: 'user', params: { id: '123' } });
 ```
 
-## 🔧 Advanced Usage
+## 🔧 高级用法
 
-### Dynamic Route Addition
+### 动态路由添加
 
 ```tsx
 const router = createRouter({ routes: [] });
 
-// Add routes dynamically
+// 动态添加路由
 router.addRoute({
   path: '/dynamic',
   component: <DynamicPage />,
 });
 
-// Add nested route
+// 添加嵌套路由
 router.addRoute('parent', {
   path: 'child',
   component: <ChildPage />,
 });
 ```
 
-### Custom Query Parsing
+### 自定义查询参数解析
 
 ```tsx
 const router = createRouter({
   routes,
   parseQuery: (search) => {
-    // Custom query parsing logic
+    // 自定义查询参数解析逻辑
     return customParse(search);
   },
   stringifyQuery: (query) => {
-    // Custom query stringification
+    // 自定义查询参数序列化
     return customStringify(query);
   },
 });
 ```
 
-### Route Resolution
+### 路由解析
 
 ```tsx
 const router = createRouter({ routes });
 
-// Resolve a route location
+// 解析路由位置
 const location = router.resolve('/users/123?tab=profile');
-// or
+// 或
 const location = router.resolve({
   name: 'user',
   params: { id: '123' },
@@ -429,48 +429,49 @@ console.log(location.params); // { id: '123' }
 console.log(location.query); // { tab: 'profile' }
 ```
 
-## 🤝 Migration from Vue Router
+## 🤝 从 Vue Router 迁移
 
-If you're familiar with Vue Router, you'll find @vureact/router very similar:
+如果您熟悉 Vue Router，您会发现 @vureact/router 非常相似：
 
-| Vue Router        | @vureact/router   | Notes               |
-| ----------------- | ----------------- | ------------------- |
-| `createRouter()`  | `createRouter()`  | Same API            |
-| `<router-view>`   | `<RouterView>`    | PascalCase in React |
-| `<router-link>`   | `<RouterLink>`    | PascalCase in React |
-| `useRouter()`     | `useRouter()`     | Same API            |
-| `useRoute()`      | `useRoute()`      | Same API            |
-| Navigation Guards | Navigation Guards | Same guard types    |
-| Route Meta        | Route Meta        | Same functionality  |
-| Nested Routes     | Nested Routes     | Same configuration  |
+| Vue Router       | @vureact/router  | 说明                    |
+| ---------------- | ---------------- | ----------------------- |
+| `createRouter()` | `createRouter()` | 相同的 API              |
+| `<router-view>`  | `<RouterView>`   | React 中使用 PascalCase |
+| `<router-link>`  | `<RouterLink>`   | React 中使用 PascalCase |
+| `useRouter()`    | `useRouter()`    | 相同的 API              |
+| `useRoute()`     | `useRoute()`     | 相同的 API              |
+| 导航守卫         | 导航守卫         | 相同的守卫类型          |
+| 路由元信息       | 路由元信息       | 相同的功能              |
+| 嵌套路由         | 嵌套路由         | 相同的配置方式          |
 
-## 📚 Examples
+## 📚 示例
 
-Check out the [examples directory](../../examples/README.md) for more usage examples.
+查看 [examples 目录](../../examples/README.zh.md) 获取更多使用示例。
 
-## 🐛 Troubleshooting
+## 🐛 故障排除
 
-### Common Issues
+### 常见问题
 
-1. **"RouterProvider must be used within a Router context"**
-   - Make sure you're wrapping your app with `<router.RouterProvider>`
+1. **"RouterProvider 必须在 Router 上下文中使用"**
+   - 确保您的应用使用 `<router.RouterProvider>` 包裹
 
-2. **Routes not matching**
-   - Check your route paths and ensure they're correctly nested
-   - Use the `exact` prop on `RouterLink` for exact matching
+2. **路由不匹配**
+   - 检查您的路由路径，确保它们正确嵌套
+   - 在 `RouterLink` 上使用 `exact` 属性进行精确匹配
 
-3. **TypeScript errors**
-   - Ensure you have the latest TypeScript version
-   - Check your tsconfig.json for proper module resolution
+3. **TypeScript 错误**
+   - 确保您有最新的 TypeScript 版本
+   - 检查您的 tsconfig.json 中的模块解析配置
 
-## 📄 License
+## 📄 许可证
 
 MIT © [Ryan John](./LICENSE)
 
-## 🔗 Links
+## 🔗 链接
 
-- [GitHub Repository](https://github.com/vureact-js/vureact-router)
-- [npm Package](https://www.npmjs.com/package/@vureact/router)
-- [Documentation](https://router.vureact.top)
-- [Issue Tracker](https://github.com/vureact-js/vureact-router/issues)
-- [Contributing Guidelines](../../CONTRIBUTING.md)
+- [GitHub 仓库](https://github.com/vureact-js/vureact-router)
+- [文档](https://router.vureact.top)
+- [问题跟踪](https://github.com/vureact-js/vureact-router/issues)
+- [贡献指南](../../CONTRIBUTING.zh.md)
+- [贡献指南](../../CONTRIBUTING.zh.md)
+- [VuReact](https://vureact.top)
