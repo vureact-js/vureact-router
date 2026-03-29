@@ -1,3 +1,7 @@
+<div align="center"><a name="readme-top"></a>
+
+<img height="180" src="./logo.png" />
+
 # @vureact/router
 
 English | [简体中文](./README.md)
@@ -40,7 +44,7 @@ pnpm add @vureact/router
 ```tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createRouter, RouterView, RouterLink } from '@vureact/router';
+import { createRouter, createWebHashHistory, RouterView, RouterLink } from '@vureact/router';
 
 // Define your routes
 const routes = [
@@ -61,7 +65,7 @@ const routes = [
 // Create router instance
 const router = createRouter({
   routes,
-  history: 'hash', // or 'browser', 'memory'
+  history: createWebHashHistory(),
 });
 
 // App component
@@ -91,29 +95,29 @@ root.render(
 
 ### Core Functions
 
-#### `createRouter(options: CreateRouterOptions): RouterInstance`
+#### `createRouter(options: RouterOptions): Router`
 
 Creates a router instance with the given configuration.
 
 ```tsx
 const router = createRouter({
   routes: [...],
-  history: 'hash', // 'hash' | 'browser' | 'memory'
+  history: createWebHashHistory(),
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',
 });
 ```
 
-#### `RouterInstance` Methods
+#### `Router` Methods
 
 - `router.beforeEach(guard: GuardWithNextFn)`: Register global before navigation guard
 - `router.beforeResolve(guard: GuardWithNextFn)`: Register global before resolve guard
 - `router.afterEach(guard: AfterEachGuard)`: Register global after navigation guard
 - `router.onError(handler: ErrorHandler)`: Register global error handler
-- `router.addRoute(route: RouteConfig)`: Add a new route
-- `router.addRoute(parentName: string, route: RouteConfig)`: Add a nested route
+- `router.addRoute(route: RouteRecordRaw)`: Add a new route
+- `router.addRoute(parentName: string, route: RouteRecordRaw)`: Add a nested route
 - `router.hasRoute(name: string)`: Check if a route exists by name
-- `router.resolve(to: string | RouterOptions)`: Resolve a route location
+- `router.resolve(to: RouteLocationRaw)`: Resolve a route location
 - `router.getRoutes()`: Get all registered routes
 - `router.clearAll()`: Clear all routes and guards
 
@@ -354,10 +358,16 @@ const routes = [
 Full TypeScript support with comprehensive type definitions:
 
 ```tsx
-import type { RouteConfig, RouterInstance, RouteLocation, RouterOptions } from '@vureact/router';
+import type {
+  RouteRecordRaw,
+  RouteLocation,
+  RouteLocationOptions,
+  RouterOptions,
+  Router,
+} from '@vureact/router';
 
 // Type-safe route configuration
-const routes: RouteConfig[] = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/users/:id',
     name: 'user',
@@ -443,10 +453,6 @@ If you're familiar with Vue Router, you'll find @vureact/router very similar:
 | Navigation Guards | Navigation Guards | Same guard types    |
 | Route Meta        | Route Meta        | Same functionality  |
 | Nested Routes     | Nested Routes     | Same configuration  |
-
-## 📚 Examples
-
-Check out the [examples directory](../../examples/README.md) for more usage examples.
 
 ## 🐛 Troubleshooting
 

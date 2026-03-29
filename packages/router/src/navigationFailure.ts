@@ -1,4 +1,9 @@
-export type NavigationFailureType = 'aborted' | 'redirected' | 'cancelled' | 'error';
+export type NavigationFailureType =
+  | 'aborted'
+  | 'redirected'
+  | 'cancelled'
+  | 'duplicated'
+  | 'error';
 
 export interface NavigationFailure {
   readonly _isNavigationFailure: true;

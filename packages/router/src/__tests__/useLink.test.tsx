@@ -1,9 +1,9 @@
 ﻿import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { RouterProvider } from 'react-router-dom';
-import { createMemoryHistory, createRouter, type RouterOptions, useLink } from '..';
+import { createMemoryHistory, createRouter, type RouteLocationOptions, useLink } from '..';
 
-function LinkProbe({ to, replace = false }: { to: string | RouterOptions; replace?: boolean }) {
+function LinkProbe({ to, replace = false }: { to: string | RouteLocationOptions; replace?: boolean }) {
   const link = useLink({ to, replace });
 
   return (

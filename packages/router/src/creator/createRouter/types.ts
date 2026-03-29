@@ -2,7 +2,7 @@ import { type FunctionComponent, type ReactNode } from 'react';
 import { type DataRouter, type NonIndexRouteObject, type RouteObject } from 'react-router-dom';
 import { type ExclusiveGuards, type GlobalGuards } from '../../guards/guardManager';
 import type { RouteLocation } from '../../hooks/useRoute';
-import { type RouterOptions as RouterHookOptions } from '../../hooks/useRouter';
+import type { RouteLocationRaw } from '../../types/route-location';
 import { type ComponentLoader } from '../createAsyncElement';
 import { GlobalRouteConfig } from '../createClobalRouteConfig';
 import { type RouterMode } from '../createHistory';
@@ -10,12 +10,12 @@ import { type RouterMode } from '../createHistory';
 /**
  * Configuration options for creating a router instance.
  */
-export interface CreateRouterOptions {
+export interface RouterOptions {
   /**
    * Array of route configuration objects.
-   * @see {@link RouteConfig}
+   * @see {@link RouteRecordRaw}
    */
-  routes: RouteConfig[];
+  routes: RouteRecordRaw[];
 
   /**
    * Router mode (hash/history/abstract). Defaults to 'hash'.
@@ -59,7 +59,7 @@ export interface CreateRouterOptions {
 /**
  * Extended route configuration with support for route-specific guards, lazy loading, and redirects.
  */
-export interface RouteConfig extends ExclusiveGuards {
+export interface RouteRecordRaw extends ExclusiveGuards {
   /**
    * Route path (supports dynamic segments).
    */
@@ -88,9 +88,9 @@ export interface RouteConfig extends ExclusiveGuards {
 
   /**
    * Nested route configurations.
-   * @see {@link RouteConfig}
+   * @see {@link RouteRecordRaw}
    */
-  children?: RouteConfig[];
+  children?: RouteRecordRaw[];
 
   /**
    * Custom CSS class for active links (overrides global setting).
@@ -136,7 +136,7 @@ type ComponentType = ReactNode | ComponentLoader | FunctionComponent;
 /**
  * Function that dynamically resolves a redirect target.
  */
-type RedirectFunc = (to: RouteConfig) => Redirect;
+type RedirectFunc = (to: RouteRecordRaw) => Redirect;
 
 /**
  * Redirect target: a path string or an options object.
@@ -146,12 +146,12 @@ type Redirect = string | RedirectOptions;
 /**
  * Redirect options matching the `push` method in `useRouter`.
  */
-type RedirectOptions = RouterHookOptions;
+type RedirectOptions = Exclude<RouteLocationRaw, string>;
 
 /**
  * The public API of a router instance.
  */
-export interface RouterInstance extends GlobalGuards {
+export interface Router extends GlobalGuards {
   /**
    * Underlying React Router DataRouter instance.
    * @see {@link DataRouter}
@@ -177,14 +177,14 @@ export interface RouterInstance extends GlobalGuards {
     /**
      * Adds a root-level route.
      */
-    (route: RouteConfig): void;
+    (route: RouteRecordRaw): void;
 
     /**
      * Adds a child route under the specified parent route name.
      * @param parentName - Name of the parent route.
      * @param route - Route configuration to add.
      */
-    (parentName: string, route: RouteConfig): void;
+    (parentName: string, route: RouteRecordRaw): void;
   };
 
   /**
@@ -197,7 +197,14 @@ export interface RouterInstance extends GlobalGuards {
    * Resolves a target location into a normalized RouteLocation object.
    * @param to - Target location as a string or options object.
    */
-  resolve: (to: string | RouterHookOptions) => RouteLocation;
+  resolve: (to: RouteLocationRaw) => RouteLocation;
+
+  push: (to: RouteLocationRaw) => void | Promise<void>;
+  replace: (to: RouteLocationRaw) => void | Promise<void>;
+  go: (delta: number) => void | Promise<void>;
+  back: () => void | Promise<void>;
+  forward: () => void | Promise<void>;
+  current: string;
 }
 
 /**

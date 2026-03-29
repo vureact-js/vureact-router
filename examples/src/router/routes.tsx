@@ -1,4 +1,4 @@
-import { type RouteConfig, RouterView } from '@vureact/router';
+import { type RouteRecordRaw, RouterView } from '@vureact/router';
 import App from '../App';
 import AppNotFound from '../pages/AppNotFound';
 import BasicRoutingDemo, {
@@ -40,7 +40,7 @@ import DocQuickStartExample from '../pages/doc-examples/DocQuickStartExample';
 import DocRouterLinkExample from '../pages/doc-examples/DocRouterLinkExample';
 import DocUseRouterUseRouteExample from '../pages/doc-examples/DocUseRouterUseRouteExample';
 
-const routes: RouteConfig[] = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'layout',

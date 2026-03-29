@@ -1,10 +1,10 @@
 ﻿import { useCallback, useMemo } from 'react';
 import { useMatch, useNavigate, useResolvedPath, type To } from 'react-router-dom';
 import { buildSearchParams, resolvedPath } from '../utils';
-import { type RouterOptions } from './useRouter';
+import type { RouteLocationOptions, RouteLocationRaw } from '../types/route-location';
 
 export interface UseLinkOptions {
-  to: string | RouterOptions;
+  to: RouteLocationRaw;
   replace?: boolean;
 }
 
@@ -42,7 +42,7 @@ export function useLink({ to, replace = false }: UseLinkOptions): UseLinkReturn 
       return {};
     }
 
-    const normalized = { ...to };
+    const normalized = { ...to } as RouteLocationOptions;
     if (normalized.path && normalized.params) {
       normalized.params = undefined;
     }

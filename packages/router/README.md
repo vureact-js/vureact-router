@@ -1,3 +1,7 @@
+<div align="center"><a name="readme-top"></a>
+
+<img height="180" src="./logo.png" />
+
 # @vureact/router
 
 简体中文 | [English](./README.en.md)
@@ -40,7 +44,7 @@ pnpm add @vureact/router
 ```tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createRouter, RouterView, RouterLink } from '@vureact/router';
+import { createRouter, createWebHashHistory, RouterView, RouterLink } from '@vureact/router';
 
 // 定义路由
 const routes = [
@@ -61,7 +65,7 @@ const routes = [
 // 创建路由实例
 const router = createRouter({
   routes,
-  history: 'hash', // 或 'browser'、'memory'
+  history: createWebHashHistory(),
 });
 
 // 应用组件
@@ -91,29 +95,29 @@ root.render(
 
 ### 核心函数
 
-#### `createRouter(options: CreateRouterOptions): RouterInstance`
+#### `createRouter(options: RouterOptions): Router`
 
 使用给定配置创建路由实例。
 
 ```tsx
 const router = createRouter({
   routes: [...],
-  history: 'hash', // 'hash' | 'browser' | 'memory'
+  history: createWebHashHistory(),
   linkActiveClass: 'active',
   linkExactActiveClass: 'exact-active',
 });
 ```
 
-#### `RouterInstance` 方法
+#### `Router` 方法
 
 - `router.beforeEach(guard: GuardWithNextFn)`: 注册全局前置导航守卫
 - `router.beforeResolve(guard: GuardWithNextFn)`: 注册全局解析守卫
 - `router.afterEach(guard: AfterEachGuard)`: 注册全局后置导航守卫
 - `router.onError(handler: ErrorHandler)`: 注册全局错误处理器
-- `router.addRoute(route: RouteConfig)`: 添加新路由
-- `router.addRoute(parentName: string, route: RouteConfig)`: 添加嵌套路由
+- `router.addRoute(route: RouteRecordRaw)`: 添加新路由
+- `router.addRoute(parentName: string, route: RouteRecordRaw)`: 添加嵌套路由
 - `router.hasRoute(name: string)`: 检查路由是否存在（通过名称）
-- `router.resolve(to: string | RouterOptions)`: 解析路由位置
+- `router.resolve(to: RouteLocationRaw)`: 解析路由位置
 - `router.getRoutes()`: 获取所有已注册路由
 - `router.clearAll()`: 清除所有路由和守卫
 
@@ -354,10 +358,16 @@ const routes = [
 完整的 TypeScript 支持，提供全面的类型定义：
 
 ```tsx
-import type { RouteConfig, RouterInstance, RouteLocation, RouterOptions } from '@vureact/router';
+import type {
+  RouteRecordRaw,
+  RouteLocation,
+  RouteLocationOptions,
+  RouterOptions,
+  Router,
+} from '@vureact/router';
 
 // 类型安全的路由配置
-const routes: RouteConfig[] = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/users/:id',
     name: 'user',
@@ -444,10 +454,6 @@ console.log(location.query); // { tab: 'profile' }
 | 路由元信息       | 路由元信息       | 相同的功能              |
 | 嵌套路由         | 嵌套路由         | 相同的配置方式          |
 
-## 📚 示例
-
-查看 [examples 目录](../../examples/README.zh.md) 获取更多使用示例。
-
 ## 🐛 故障排除
 
 ### 常见问题
@@ -469,9 +475,8 @@ MIT © [Ryan John](./LICENSE)
 
 ## 🔗 链接
 
-- [GitHub 仓库](https://github.com/vureact-js/vureact-router)
-- [文档](https://router.vureact.top)
+- [GitHub](https://github.com/vureact-js/vureact-router)
+- [VuReact Router](https://router.vureact.top)
 - [问题跟踪](https://github.com/vureact-js/vureact-router/issues)
-- [贡献指南](../../CONTRIBUTING.zh.md)
 - [贡献指南](../../CONTRIBUTING.zh.md)
 - [VuReact](https://vureact.top)

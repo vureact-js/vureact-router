@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { act, ReactNode } from 'react';
-import { createRouter, createWebHistory, RouteLocation, RouterInstance, RouterView } from '..';
+import { createRouter, createWebHistory, RouteLocation, Router, RouterView } from '..';
 
 describe('RouterView Test Suites', () => {
-  let routerInstance: RouterInstance;
+  let routerInstance: Router;
   let customRenderCallCount = 0;
   let lastReceivedRoute: any = null;
 
@@ -227,7 +227,7 @@ describe('RouterView Async Test Suites', () => {
       });
   };
 
-  let routerInstance: RouterInstance = {} as RouterInstance;
+  let routerInstance: Router = {} as Router;
 
   beforeEach(() => {
     jest.clearAllMocks();

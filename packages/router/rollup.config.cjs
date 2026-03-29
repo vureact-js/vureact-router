@@ -16,7 +16,6 @@ const banner = `/**
 
 const entries = {
   'vureact-router': 'src/index.ts',
-  'type-compat': 'src/vue-router-type-compat.ts',
 };
 
 const outputItem = (type = 'js', format = 'cjs') => ({

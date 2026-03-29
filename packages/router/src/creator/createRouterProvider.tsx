@@ -1,6 +1,7 @@
 import { type FC, type PropsWithChildren, type ReactNode } from 'react';
 import type { DataRouter } from 'react-router-dom';
 import { RouterProvider as ReactRouterProvider } from 'react-router-dom';
+import type { Router } from './createRouter/types';
 import { RouterContextProvider } from '../context/RouterContext';
 import { GuardManagerImpl } from '../guards/guardManager';
 
@@ -11,20 +12,16 @@ type ReturnValues = {
   }>;
 };
 
-/**
- * 创建集成的 `react-router-dom` RouterProvider
- * @param router 路由配置
- * @returns ReturnValues
- */
-export function createRouterProvider(router: DataRouter): ReturnValues {
+export function createRouterProvider(routerCore: DataRouter, router: Router): ReturnValues {
   const guardManager = new GuardManagerImpl();
-  const RouterProvider: React.FC<PropsWithChildren> = ({ children }) => {
+  const RouterProvider: FC<PropsWithChildren> = ({ children }) => {
     return (
-      <RouterContextProvider {...{ guardManager }}>
-        <ReactRouterProvider {...{ router }} />
+      <RouterContextProvider router={router} guardManager={guardManager}>
+        <ReactRouterProvider router={routerCore} />
         {children}
       </RouterContextProvider>
     );
   };
+
   return { guardManager, RouterProvider };
 }

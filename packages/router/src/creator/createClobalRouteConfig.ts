@@ -1,11 +1,11 @@
 import type { RouteObject } from 'react-router-dom';
-import type { RouteConfig } from './createRouter/types';
+import type { RouteRecordRaw } from './createRouter/types';
 
 export interface GlobalRouteConfig {
   /**
    * 原始路由配置
    */
-  source: RouteConfig[];
+  source: RouteRecordRaw[];
   /**
    * 转换后的 React Router 路由对象
    */
@@ -27,7 +27,7 @@ export function createRouteContainer(): GlobalRouteConfig {
   };
 }
 
-export function registerRouteConfig(routes: RouteConfig[], convertedRoutes: RouteObject[]) {
+export function registerRouteConfig(routes: RouteRecordRaw[], convertedRoutes: RouteObject[]) {
   _ROUTE_CONFIG_.source = routes;
   _ROUTE_CONFIG_.converted = convertedRoutes;
 }

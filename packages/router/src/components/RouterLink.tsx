@@ -7,14 +7,14 @@ import {
   type LinkProps,
   type To,
 } from 'react-router-dom';
-import { type RouterOptions } from '../hooks/useRouter';
+import type { RouteLocationOptions, RouteLocationRaw } from '../types/route-location';
 import { getRuntimeRouterConfig } from '../runtimeConfig';
 import { buildSearchParams, resolvedPath } from '../utils';
 
 export type RouterLinkProps = Omit<LinkProps, 'to'> & RouterLinkBaseProps;
 
 export interface RouterLinkBaseProps {
-  to: string | RouterOptions;
+  to: RouteLocationRaw;
   replace?: boolean;
   customRender?: LinkCustomRender;
   custom?: LinkCustomRender;
@@ -67,7 +67,7 @@ function RouterLink(props: PropsWithChildren<RouterLinkProps>) {
       return {};
     }
 
-    const normalized = { ...to };
+    const normalized = { ...to } as RouteLocationOptions;
     // 如果同时有 path 和 params，优先使用 path，清除 params
     if (normalized.path && normalized.params) {
       normalized.params = undefined;

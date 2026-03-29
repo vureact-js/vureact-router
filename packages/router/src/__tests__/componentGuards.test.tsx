@@ -4,14 +4,14 @@ import { useState } from 'react';
 import {
     createRouter,
     createWebHistory,
-    RouterInstance,
+    Router,
     RouterView,
     useBeforeRouteLeave,
     useBeforeRouteUpdate,
 } from '..';
 
 describe('Component Guards Test Suites', () => {
-  let routerInstance: RouterInstance = {} as RouterInstance;
+  let routerInstance: Router = {} as Router;
 
   const mockConfirm = jest.fn();
   const mockGuard = jest.fn();

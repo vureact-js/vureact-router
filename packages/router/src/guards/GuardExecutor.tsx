@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { matchPath, useNavigate } from 'react-router-dom';
-import { RouteConfig } from '../creator/createRouter';
+import type { RouteRecordRaw } from '../creator/createRouter';
 import { useGuardManager } from '../hooks/useGuardManager';
 import { type RouteLocation } from '../hooks/useRoute';
 import { createNavigationFailure, type NavigationFailure } from '../navigationFailure';
@@ -48,8 +48,8 @@ export function GuardExecutor({ render, outlet, route }: Props) {
 
   // 判断是否需要触发 beforeEnter 守卫
   const shouldTriggerBeforeEnter = (
-    sourceFromRoute: RouteConfig | null,
-    sourceToRoute: RouteConfig | null,
+    sourceFromRoute: RouteRecordRaw | null,
+    sourceToRoute: RouteRecordRaw | null,
     from: RouteLocation,
     to: RouteLocation,
   ) => {
@@ -70,8 +70,8 @@ export function GuardExecutor({ render, outlet, route }: Props) {
 
   // 判断是否需要触发 beforeRouteUpdate 守卫
   const shouldTriggerBeforeRouteUpdate = (
-    sourceFromRoute: RouteConfig | null,
-    sourceToRoute: RouteConfig | null,
+    sourceFromRoute: RouteRecordRaw | null,
+    sourceToRoute: RouteRecordRaw | null,
     from: RouteLocation,
     to: RouteLocation,
   ): boolean => {

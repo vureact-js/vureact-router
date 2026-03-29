@@ -1,8 +1,8 @@
 import { FunctionComponent, isValidElement } from 'react';
 import { matchPath, type Params, type Path } from 'react-router-dom';
 import { _ROUTE_CONFIG_, type GlobalRouteConfig } from './creator/createClobalRouteConfig';
-import type { RouteConfig } from './creator/createRouter';
-import { type RouterOptions as RouterHookOptions } from './hooks/useRouter';
+import type { RouteRecordRaw } from './creator/createRouter';
+import type { RouteLocationOptions, RouteLocationRaw } from './types/route-location';
 import { getRuntimeRouterConfig } from './runtimeConfig';
 
 export type ResolvedTo = {
@@ -22,7 +22,7 @@ export function stringifyQuery(query?: Record<string, any>): string {
   return getRuntimeRouterConfig().stringifyQuery(query);
 }
 
-export const buildFullPath = (to: string | RouterHookOptions, currentPath = '/'): string => {
+export const buildFullPath = (to: RouteLocationRaw, currentPath = '/'): string => {
   if (typeof to === 'string') {
     return to;
   }
@@ -38,7 +38,7 @@ export const buildFullPath = (to: string | RouterHookOptions, currentPath = '/')
   );
 };
 
-export function buildResolvedTo(to: string | RouterHookOptions, currentPath = '/'): ResolvedTo {
+export function buildResolvedTo(to: RouteLocationRaw, currentPath = '/'): ResolvedTo {
   if (typeof to === 'string') {
     const [pathPart, hashPart = ''] = to.split('#');
     const [pathname, searchPart = ''] = pathPart!.split('?');
@@ -65,10 +65,10 @@ export function buildResolvedTo(to: string | RouterHookOptions, currentPath = '/
 }
 
 export function normalizeRouterOptions(
-  to: RouterHookOptions,
+  to: RouteLocationOptions,
   currentPath = '/',
-): RouterHookOptions {
-  const normalized: RouterHookOptions = {
+): RouteLocationOptions {
+  const normalized: RouteLocationOptions = {
     ...to,
   };
 
@@ -83,7 +83,7 @@ export function normalizeRouterOptions(
   return normalized;
 }
 
-export function resolveRouteLocation(to: string | RouterHookOptions, currentPath = '/'): Path {
+export function resolveRouteLocation(to: RouteLocationRaw, currentPath = '/'): Path {
   const resolved = buildResolvedTo(to, currentPath);
   return {
     pathname: resolved.pathname,
@@ -92,7 +92,7 @@ export function resolveRouteLocation(to: string | RouterHookOptions, currentPath
   };
 }
 
-export function resolvedPath({ name, path, params }: RouterHookOptions): string {
+export function resolvedPath({ name, path, params }: RouteLocationOptions): string {
   return name ? getPathByName(name, params) : buildPathWithParams(path!, params);
 }
 
@@ -123,8 +123,8 @@ export function buildSearchParams(query?: Record<string, any>): string | undefin
 
 export function findRouteByName(
   name: string,
-  routes: RouteConfig[] = _ROUTE_CONFIG_.source,
-): RouteConfig | null {
+  routes: RouteRecordRaw[] = _ROUTE_CONFIG_.source,
+): RouteRecordRaw | null {
   for (const route of routes) {
     if (route.name === name) {
       return route;
@@ -146,9 +146,9 @@ function joinPaths(basePath: string, path?: string): string {
 
 function findRouteByNameWithBase(
   name: string,
-  routes: RouteConfig[],
+  routes: RouteRecordRaw[],
   basePath = '',
-): { route: RouteConfig; fullPath: string } | null {
+): { route: RouteRecordRaw; fullPath: string } | null {
   for (const route of routes) {
     const fullPath = joinPaths(basePath, route.path);
 
@@ -169,7 +169,7 @@ export function hasRouteByName(name: string): boolean {
   return !!findRouteByName(name);
 }
 
-export function findParentRoute(parentName: string): RouteConfig | null {
+export function findParentRoute(parentName: string): RouteRecordRaw | null {
   return findRouteByName(parentName);
 }
 
@@ -186,8 +186,8 @@ export function getPathByName(name?: string, params?: Params): string {
   return buildPathWithParams(resolved.fullPath, params);
 }
 
-export function getRouteByPath(path: string): RouteConfig | null {
-  const findRouteByPath = (routes: RouteConfig[], basePath = ''): RouteConfig | null => {
+export function getRouteByPath(path: string): RouteRecordRaw | null {
+  const findRouteByPath = (routes: RouteRecordRaw[], basePath = ''): RouteRecordRaw | null => {
     for (const route of routes) {
       if (route.path === path) {
         return route;
