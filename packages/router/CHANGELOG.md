@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-29
+
+### Added
+
+- **Vue Router类型兼容层**: 新增 `@vureact/router/type-compat` 子路径导出，提供与 Vue Router 4.x 兼容的类型别名
+- **类型兼容文档**: 新增 `VUE_ROUTER_TYPE_COMPAT.md` 文档，详细说明类型兼容层的使用方法
+- **类型别名支持**: 新增 `RouteRecordRaw`、`Router`、`RouterOptions` 等 Vue Router 兼容类型别名
+
+### Changed
+
+- **构建配置**: 更新 rollup 配置以支持 type-compat 模块的构建
+- **示例项目**: 更新 examples 项目依赖，移除 react-router-dom 的直接依赖
+- **文档清理**: 移除 SUPPORT.md 和 SUPPORT.zh.md 文件，简化项目结构
+
+---
+
+[1.2.0]: https://github.com/vureact-js/vureact-router/compare/v1.1.1...v1.2.0
+
+---
+
 ## [1.1.1] - 2026-03-20
 
 ### Fixed
@@ -46,4 +66,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
----
+```md
+[Unreleased]: https://github.com/vureact-js/vureact-router/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/vureact-js/vureact-router/compare/v1.1.1...v1.2.0
+[1.1.1]: https://github.com/vureact-js/vureact-router/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/vureact-js/vureact-router/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/vureact-js/vureact-router/compare/v1.0.0...HEAD
+```

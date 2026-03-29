@@ -14,3 +14,4 @@ export * from './hooks/useLink';
 export * from './hooks/useRoute';
 export * from './hooks/useRouter';
 export * from './navigationFailure';
+export type * from './types/vue-router-alias';

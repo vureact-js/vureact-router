@@ -1,6 +1,6 @@
 {
   "name": "@vureact/router",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "type": "module",
   "main": "./dist/cjs/vureact-router.js",
   "module": "./dist/esm/vureact-router.esm.js",
@@ -29,6 +29,11 @@
       "types": "./dist/types/vureact-router.d.ts",
       "import": "./dist/esm/vureact-router.esm.js",
       "require": "./dist/cjs/vureact-router.js"
+    },
+    "./type-compat": {
+      "types": "./dist/types/type-compat.d.ts",
+      "import": "./dist/esm/type-compat.esm.js",
+      "require": "./dist/cjs/type-compat.js"
     }
   },
   "files": [
