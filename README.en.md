@@ -49,30 +49,26 @@ pnpm add @vureact/router
 ### Basic Setup
 
 ```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { createRouter, createWebHashHistory, RouterView, RouterLink } from '@vureact/router';
-
-// Define your routes
-const routes = [
-  {
-    path: '/',
-    component: <div>Home Page</div>,
-  },
-  {
-    path: '/about',
-    component: <div>About Page</div>,
-  },
-  {
-    path: '/users/:id',
-    component: <div>User Profile</div>,
-  },
-];
 
 // Create router instance
 const router = createRouter({
-  routes,
   history: createWebHashHistory(),
+  routes: [
+    {
+      path: '/',
+      component: <div>Home Page</div>,
+    },
+    {
+      path: '/about',
+      component: <div>About Page</div>,
+    },
+    {
+      path: '/users/:id',
+      component: <div>User Profile</div>,
+    },
+  ],
 });
 
 // App component
@@ -90,12 +86,7 @@ function App() {
 }
 
 // Render your app
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <router.RouterProvider>
-    <App />
-  </router.RouterProvider>,
-);
+createRoot(document.getElementById('root')!).render(<router.RouterProvider />);
 ```
 
 ## 📖 API Reference
@@ -213,25 +204,25 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: <HomePage />,
+    component: HomePage,
     meta: { requiresAuth: true },
     children: [
       {
         path: 'dashboard',
         name: 'dashboard',
-        component: <Dashboard />,
+        component: Dashboard,
         meta: { title: 'Dashboard' },
       },
     ],
   },
   {
     path: '/login',
-    component: <LoginPage />,
+    component: LoginPage,
     meta: { guestOnly: true },
   },
   {
     path: '/users/:id',
-    component: <UserProfile />,
+    component: UserProfile,
     beforeEnter: (to, from) => {
       // Component-specific guard
       if (!isAuthenticated()) {

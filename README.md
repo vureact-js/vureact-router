@@ -49,30 +49,26 @@ pnpm add @vureact/router
 ### 基础设置
 
 ```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { createRouter, createWebHashHistory, RouterView, RouterLink } from '@vureact/router';
-
-// 定义路由
-const routes = [
-  {
-    path: '/',
-    component: <div>首页</div>,
-  },
-  {
-    path: '/about',
-    component: <div>关于页面</div>,
-  },
-  {
-    path: '/users/:id',
-    component: <div>用户资料</div>,
-  },
-];
 
 // 创建路由实例
 const router = createRouter({
-  routes,
   history: createWebHashHistory(),
+  routes: [
+    {
+      path: '/',
+      component: <div>首页</div>,
+    },
+    {
+      path: '/about',
+      component: <div>关于页面</div>,
+    },
+    {
+      path: '/users/:id',
+      component: <div>用户资料</div>,
+    },
+  ],
 });
 
 // 应用组件
@@ -90,12 +86,7 @@ function App() {
 }
 
 // 渲染应用
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <router.RouterProvider>
-    <App />
-  </router.RouterProvider>,
-);
+createRoot(document.getElementById('root')!).render(<router.RouterProvider />);
 ```
 
 ## 📖 API 参考
@@ -213,25 +204,25 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: <HomePage />,
+    component: HomePage,
     meta: { requiresAuth: true },
     children: [
       {
         path: 'dashboard',
         name: 'dashboard',
-        component: <Dashboard />,
+        component: Dashboard,
         meta: { title: '仪表板' },
       },
     ],
   },
   {
     path: '/login',
-    component: <LoginPage />,
+    component: LoginPage,
     meta: { guestOnly: true },
   },
   {
     path: '/users/:id',
-    component: <UserProfile />,
+    component: UserProfile,
     beforeEnter: (to, from) => {
       // 组件特定守卫
       if (!isAuthenticated()) {
