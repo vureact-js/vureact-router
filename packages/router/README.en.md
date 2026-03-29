@@ -1,12 +1,19 @@
 <div align="center"><a name="readme-top"></a>
 
-<img height="180" src="./logo.png" />
+<img height="180" src="../../logo.png" />
 
 # @vureact/router
 
+Vue Router 4.x Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)
+
+[![npm version](https://img.shields.io/npm/v/@vureact/router.svg?style=flat-square)](https://router.vureact.top/)
+[![npm downloads](https://img.shields.io/npm/dm/@vureact/router.svg?style=flat-square)](https://www.npmjs.com/package/@vureact/vureact-router)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![React 18+](https://img.shields.io/badge/React-18%2B-61dafb)](https://reactjs.org/)
+
 English | [简体中文](./README.md)
 
-Vue Router 4.x Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)
+</div>
 
 ## ✨ Features
 
