@@ -6,8 +6,9 @@
 
 Vue Router 4.x Adapter for React 18+ (Encapsulated on React Router DOM 7.9+)
 
-[![npm version](https://img.shields.io/npm/v/@vureact/router.svg?style=flat-square)](https://router.vureact.top/)
-[![npm downloads](https://img.shields.io/npm/dm/@vureact/router.svg?style=flat-square)](https://www.npmjs.com/package/@vureact/vureact-router)
+[![Npm](https://img.shields.io/npm/v/@vureact/router.svg?label=Npm&style=flat-square)](https://router.vureact.top/en/)
+[![Total Downloads](https://img.shields.io/npm/dt/@vureact/router?label=Total%20Downloads&style=flat-square)](https://www.npmjs.com/package/@vureact/router)
+[![Monthly Downloads](https://img.shields.io/npm/dm/@vureact/router?label=Monthly%20Downloads&style=flat-square)](https://www.npmjs.com/package/@vureact/router)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React 18+](https://img.shields.io/badge/React-18%2B-61dafb)](https://reactjs.org/)
 
