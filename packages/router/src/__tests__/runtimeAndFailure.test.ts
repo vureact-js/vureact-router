@@ -56,4 +56,14 @@ describe('runtime config and failure utilities', () => {
     expect(isNavigationFailure({})).toBe(false);
     expect(isNavigationFailure(null)).toBe(false);
   });
+
+  it('should handle navigation failure type correctly', () => {
+    const aborted = createNavigationFailure('aborted', { message: 'aborted' });
+    const cancelled = createNavigationFailure('cancelled', { message: 'cancelled' });
+    const duplicated = createNavigationFailure('duplicated', { message: 'duplicated' });
+
+    expect(isNavigationFailure(aborted)).toBe(true);
+    expect(isNavigationFailure(cancelled)).toBe(true);
+    expect(isNavigationFailure(duplicated)).toBe(true);
+  });
 });
