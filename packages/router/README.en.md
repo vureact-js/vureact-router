@@ -6,6 +6,7 @@
 Built on top of React Router DOM 7.9+, it provides familiar capabilities such as `createRouter`, `RouterLink`, `RouterView`, `useRouter`, `useRoute`, navigation guards, and route meta.
 
 [![Downloads](https://img.shields.io/npm/dt/@vureact/router?label=Downloads&style=flat-square)](https://www.npmjs.com/package/@vureact/router)
+[![Coverage](https://codecov.io/gh/vureact-js/vureact-router/graph/badge.svg?flag=router&style=flat-square)](https://codecov.io/gh/vureact-js/vureact-router)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React >=18](https://img.shields.io/badge/React->=18-61dafb)](https://reactjs.org/)
 

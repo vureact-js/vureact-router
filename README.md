@@ -13,6 +13,7 @@
 [![Npm](https://img.shields.io/npm/v/@vureact/router.svg?label=Npm&style=flat-square)](https://www.npmjs.com/package/@vureact/router)
 [![Downloads](https://img.shields.io/npm/dt/@vureact/router?label=Downloads&style=flat-square)](https://www.npmjs.com/package/@vureact/router)
 [![Monthly](https://img.shields.io/npm/dm/@vureact/router?label=Monthly&style=flat-square)](https://www.npmjs.com/package/@vureact/router)
+[![Coverage](https://codecov.io/gh/vureact-js/vureact-router/graph/badge.svg?flag=router&style=flat-square)](https://codecov.io/gh/vureact-js/vureact-router)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/vureact-js/vureact-router/blob/master/LICENSE)
 [![React >=18](https://img.shields.io/badge/React->=18-61dafb)](https://reactjs.org/)
 
